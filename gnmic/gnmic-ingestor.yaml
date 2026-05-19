@@ -1,35 +1,100 @@
 ---
-username: admin
 log: true
 
-loader:
-  type: docker
-  filters:
-    - containers:
-        - label=clab-node-kind: nokia_srlinux
-      config:
-        skip-verify: true
-        insecure: false
-        password: NokiaSrl1!
-        subscriptions:
-          - srl-if-states
-          - srl-if-stats
-          - srl-bgp
-          - srl-system-performance
-          - srl-routes
-          - srl-bridge
-          - srl-apps
-          - srl-net-instance
-    - containers:
-        - label=clab-node-kind: arista_ceos
-      port: "6030"
-      config:
-        skip-verify: false
-        insecure: true
-        password: admin
-        subscriptions:
-          - eos-if-states
-          - eos-if-stats
+username: cisco
+password: C1sco12345
+insecure: true
+port: 57777
+
+targets:
+  10.10.20.101:
+    name: xrd-1
+    subscriptions:
+      - srl-if-states
+      - srl-if-stats
+      - srl-bgp
+      - srl-system-performance
+      - srl-routes
+      - srl-bridge
+      - srl-apps
+      - srl-net-instance
+  10.10.20.102:
+    name: xrd-2
+    subscriptions:
+      - srl-if-states
+      - srl-if-stats
+      - srl-bgp
+      - srl-system-performance
+      - srl-routes
+      - srl-bridge
+      - srl-apps
+      - srl-net-instance
+  10.10.20.103:
+    name: xrd-3
+    subscriptions:
+      - srl-if-states
+      - srl-if-stats
+      - srl-bgp
+      - srl-system-performance
+      - srl-routes
+      - srl-bridge
+      - srl-apps
+      - srl-net-instance
+  10.10.20.104:
+    name: xrd-4
+    subscriptions:
+      - srl-if-states
+      - srl-if-stats
+      - srl-bgp
+      - srl-system-performance
+      - srl-routes
+      - srl-bridge
+      - srl-apps
+      - srl-net-instance
+  10.10.20.105:
+    name: xrd-5
+    subscriptions:
+      - srl-if-states
+      - srl-if-stats
+      - srl-bgp
+      - srl-system-performance
+      - srl-routes
+      - srl-bridge
+      - srl-apps
+      - srl-net-instance
+  10.10.20.106:
+    name: xrd-6
+    subscriptions:
+      - srl-if-states
+      - srl-if-stats
+      - srl-bgp
+      - srl-system-performance
+      - srl-routes
+      - srl-bridge
+      - srl-apps
+      - srl-net-instance
+  10.10.20.107:
+    name: xrd-7
+    subscriptions:
+      - srl-if-states
+      - srl-if-stats
+      - srl-bgp
+      - srl-system-performance
+      - srl-routes
+      - srl-bridge
+      - srl-apps
+      - srl-net-instance
+  10.10.20.108:
+    name: xrd-8
+    subscriptions:
+      - srl-if-states
+      - srl-if-stats
+      - srl-bgp
+      - srl-system-performance
+      - srl-routes
+      - srl-bridge
+      - srl-apps
+      - srl-net-instance
 
 subscriptions:
   # srl
@@ -115,8 +180,8 @@ subscriptions:
     mode: stream
     stream-mode: on_change
     # heartbeat-interval: 60s
-      #stream-mode: sample
-      #sample-interval: 5s
+    #stream-mode: sample
+    #sample-interval: 5s
     paths:
       - /interfaces/interface[name=*]/state/admin-status
       - /interfaces/interface[name=*]/state/oper-status
