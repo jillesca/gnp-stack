@@ -1,3 +1,4 @@
 .gnp-stack.clab.yml.bak
 clab-gnp-stack
 *.bak
+grafana/plugins
