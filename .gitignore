@@ -2,3 +2,4 @@
 clab-gnp-stack
 *.bak
 grafana/plugins
+.env

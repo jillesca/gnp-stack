@@ -105,38 +105,3 @@ vm-logs:
 
 vm-status:
 	$(VM_SSH) "cd $(VM_PATH) && $(VM_COMPOSE) ps"
-
-up:
-	$(COMPOSE) up -d
-
-up-vm:
-	$(COMPOSE_VM) up -d
-
-up-laptop:
-	$(COMPOSE_LAPTOP) up -d
-
-down:
-	$(COMPOSE) down
-
-down-vm:
-	$(COMPOSE_VM) down
-
-down-laptop:
-	$(COMPOSE_LAPTOP) down
-
-restart: down up
-
-restart-vm: down-vm up-vm
-
-restart-laptop: down-laptop up-laptop
-
-logs:
-	$(COMPOSE) logs -f
-
-ps:
-	$(COMPOSE) ps
-
-validate:
-	@echo "Container engine: $(CONTAINER_ENGINE)"
-	@echo "Checking Prometheus targets..."
-	@curl -s http://localhost:9090/api/v1/targets | python3 -m json.tool | grep -E '"health"|"job"'
