@@ -1,5 +1,5 @@
-CONTAINER_ENGINE := $(shell command -v podman >/dev/null 2>&1 && echo podman || echo docker)
-COMPOSE          := $(CONTAINER_ENGINE) compose
+CONTAINER_ENGINE := $(shell command -v podman >/dev/null 2>&1 && podman compose version >/dev/null 2>&1 && echo podman || echo docker)
+COMPOSE          := $(shell command -v docker-compose >/dev/null 2>&1 && echo docker-compose || echo $(CONTAINER_ENGINE) compose)
 COMPOSE_VM       := $(COMPOSE) -f compose.yaml -f compose.override.vm.yaml
 
 .PHONY: help up up-vm down down-vm restart restart-vm logs ps validate

@@ -21,7 +21,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # allows docker loader in gnmic config, only needed for demo containerlab networks
     command: "--config /app/gnmic.yaml --log subscribe"
     networks:
-      - gnp-mgmt
+      gnp-mgmt: {}
     depends_on:
       prometheus:
         condition: service_healthy
@@ -79,12 +79,23 @@ services:
       interval: 5s
       timeout: 3s
       retries: 3
-      start_period: 10s    
+      start_period: 10s
+
+  loki:
+    image: grafana/loki:3.5.0
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/loki-config.yaml
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+    networks:
+      - gnp-mgmt
 
   grafana:
     image: grafana/grafana:12.3.5
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=grafana
+      - GF_UNIFIED_ALERTING_ENABLED=true
     volumes:
       - ./grafana/provisioning/datasource.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
       - ./grafana/provisioning/dashboards.yaml:/etc/grafana/provisioning/dashboards/default.yaml:ro
@@ -93,4 +104,6 @@ services:
     ports:
       - 3000:3000
     networks:
-      - gnp-mgmt
+      gnp-mgmt: {}
+    depends_on:
+      - loki

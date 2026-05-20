@@ -1,0 +1,29 @@
+// Grafana Alloy configuration for XRd syslog ingestion
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+
+loki.source.syslog "xrd_syslog" {
+  listener {
+    address             = "0.0.0.0:5514"
+    protocol            = "udp"
+    use_rfc5424_message = true
+    labels = {
+      job    = "xrd-syslog",
+      source = "xrd",
+    }
+  }
+  listener {
+    address             = "0.0.0.0:5514"
+    protocol            = "tcp"
+    use_rfc5424_message = true
+    labels = {
+      job    = "xrd-syslog",
+      source = "xrd",
+    }
+  }
+  forward_to = [loki.write.default.receiver]
+}

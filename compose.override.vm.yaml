@@ -1,0 +1,34 @@
+# VM-mode overlay. Used with: make up-vm (= docker compose -f compose.yaml -f compose.override.vm.yaml up -d)
+# Requires the segment-routing_mgmt macvlan network to exist on the Docker host.
+# Do not use on a laptop — that network does not exist there.
+
+networks:
+  xrd-mgmt:
+    external: true
+    name: segment-routing_mgmt
+
+services:
+  gnmic-ingestor:
+    networks:
+      gnp-mgmt: {}
+      xrd-mgmt: {} # direct Layer 2 to XRd gNMI endpoints
+
+  alloy:
+    image: grafana/alloy:v1.8.3
+    ports:
+      - 12345:12345 # Alloy UI (debugging)
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+    command: run /etc/alloy/config.alloy
+    networks:
+      gnp-mgmt: # reaches Loki
+      xrd-mgmt: # XRd devices push syslog here
+        ipv4_address: ${ALLOY_MACVLAN_IP:-10.10.20.11}
+    depends_on:
+      - loki
+
+  grafana:
+    networks:
+      gnp-mgmt: {} # reaches Prometheus and Loki
+      xrd-mgmt: # accessible from laptop via VPN at 10.10.20.12:3000
+        ipv4_address: ${GRAFANA_MACVLAN_IP:-10.10.20.12}
