@@ -22,6 +22,26 @@ inputs:
     event-processors:
       - srl-up-down-map
 
+  nats-xrd:
+    type: jetstream
+    name: gnmic-xrd-emitter
+    address: nats:4222
+    stream: xrd
+    subjects: []
+    format: event
+    deliver-policy: all
+    subject-format: subscription.target
+    connect-time-wait: 3s
+    debug: false
+    num-workers: 1
+    buffer-size: 1000
+    fetch-batch-size: 500
+    max-ack-pending: 100000
+    outputs:
+      - prom-write
+    event-processors:
+      - xrd-state-to-int
+
   nats-eos:
     type: jetstream
     name: gnmic-eos-emitter
@@ -57,8 +77,68 @@ outputs:
     num-writers: 1
     debug: false
 
-
 processors:
+  # XRd state values → integers for Prometheus
+  # OC interface: oper-status / admin-status → UP/DOWN
+  # XR native ISIS: neighbor-state → isis-adj-up-state / isis-adj-down-state
+  # XR native BGP:  connection-state → bgp-st-estab / bgp-st-{idle,connect,active,...}
+  xrd-state-to-int:
+    event-strings:
+      value-names:
+        - oper-status
+        - admin-status
+        - neighbor-state
+        - connection-state
+      transforms:
+        - replace:
+            apply-on: "value"
+            old: "UP"
+            new: "1"
+        - replace:
+            apply-on: "value"
+            old: "up"
+            new: "1"
+        - replace:
+            apply-on: "value"
+            old: "isis-adj-up-state"
+            new: "1"
+        - replace:
+            apply-on: "value"
+            old: "bgp-st-estab"
+            new: "1"
+        - replace:
+            apply-on: "value"
+            old: "DOWN"
+            new: "0"
+        - replace:
+            apply-on: "value"
+            old: "down"
+            new: "0"
+        - replace:
+            apply-on: "value"
+            old: "isis-adj-down-state"
+            new: "0"
+        - replace:
+            apply-on: "value"
+            old: "bgp-st-idle"
+            new: "0"
+        - replace:
+            apply-on: "value"
+            old: "bgp-st-connect"
+            new: "0"
+        - replace:
+            apply-on: "value"
+            old: "bgp-st-active"
+            new: "0"
+        - replace:
+            apply-on: "value"
+            old: "bgp-st-opensent"
+            new: "0"
+        - replace:
+            apply-on: "value"
+            old: "bgp-st-openconfirm"
+            new: "0"
+
   # srl
   srl-up-down-map:
     event-strings:
@@ -69,12 +149,12 @@ processors:
             apply-on: "value"
             old: "up"
             new: "1"
-        - replace:  
+        - replace:
             apply-on: "value"
             old: "down"
             new: "0"
 
-  # eos          
+  # eos
   eos-up-down-map:
     event-strings:
       value-names:
@@ -97,7 +177,6 @@ processors:
             apply-on: "value"
             old: "DOWN"
             new: "0"
-
 
 api-server:
   address: :7890
