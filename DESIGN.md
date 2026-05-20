@@ -115,21 +115,22 @@ XRd uses Docker macvlan networking (`ens160`, subnet `10.10.20.0/24`, gateway `1
 
 ## Key Design Decisions
 
-| Decision                    | Choice                                                                                   | Rationale                                                                                                                  |
-| --------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Where gnp-stack runs        | Sandbox VM (Docker)                                                                      | XRd cannot push syslog to laptop; VM containers can reach XRd via Docker routing                                           |
-| Container engine            | Docker on VM, Podman on laptop; Makefile detects                                         | Author uses both environments                                                                                              |
-| Log ingestion               | Grafana Alloy (syslog receiver) → Loki                                                   | Real-time, native Grafana stack, push-based                                                                                |
-| Log collection method       | XRd pushes syslog to Alloy (UDP)                                                         | Pull-based gNMI log polling is not real-time enough for alert correlation                                                  |
-| gNMI path model             | OpenConfig primary + XR native YANG for richer metrics                                   | OpenConfig confirmed working on XRd 25.3.1 via gNMIBuddy                                                                   |
-| Alert scenario (primary)    | Interface down → ISIS adjacency cascade                                                  | Most compelling demo: one event, visible cascade, agents find root cause                                                   |
-| Alert scenarios (secondary) | BGP session down, SR-TE path failure, vRR peer loss                                      | Implement if time allows; alert payload schema supports all                                                                |
-| Alert payload               | Minimal, generic schema (no node_role hardcoding)                                        | gNMIBuddy MCP determines device role dynamically; keeps payload extensible                                                 |
-| Dashboards                  | New XRd dashboards in `grafana/dashboards/xrd/`; existing dashboards untouched           | Preserves upstream gnp-stack dashboards; isolates XRd contribution                                                         |
-| Dashboard layout            | Single-pane-of-glass, all rows expanded                                                  | Demo audience sees one screen; no navigation needed                                                                        |
-| Container networking        | Dual-network: `gnp-mgmt` bridge (internal) + `segment-routing_mgmt` macvlan (XRd-facing) | Avoids subnet conflict; gnmic-ingestor reaches XRd directly; Alloy receives syslog; Grafana accessible from laptop via VPN |
-| Webhook receiver            | FastAPI (Phase 4, built last)                                                            | Lowest risk; dashboards and alerting proven before integration                                                             |
-| Future NSO integration      | Out of scope for this document                                                           | Author may add NSO + MCP for intended-state comparison after Cisco Live                                                    |
+| Decision                    | Choice                                                                                    | Rationale                                                                                                                  |
+| --------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Where gnp-stack runs        | Sandbox VM (Docker)                                                                       | XRd cannot push syslog to laptop; VM containers can reach XRd via Docker routing                                           |
+| Container engine            | Docker on VM, Podman on laptop; Makefile detects                                          | Author uses both environments                                                                                              |
+| Log ingestion               | Grafana Alloy (syslog receiver) → Loki                                                    | Real-time, native Grafana stack, push-based                                                                                |
+| Log collection method       | XRd pushes syslog to Alloy (UDP)                                                          | Pull-based gNMI log polling is not real-time enough for alert correlation                                                  |
+| gNMI path model             | OpenConfig primary + XR native YANG for richer metrics                                    | OpenConfig confirmed working on XRd 25.3.1 via gNMIBuddy                                                                   |
+| Alert scenario (primary)    | Interface down → ISIS adjacency cascade                                                   | Most compelling demo: one event, visible cascade, agents find root cause                                                   |
+| Alert scenarios (secondary) | BGP session down, SR-TE path failure, vRR peer loss                                       | Implement if time allows; alert payload schema supports all                                                                |
+| Alert payload               | Minimal, generic schema (no node_role hardcoding)                                         | gNMIBuddy MCP determines device role dynamically; keeps payload extensible                                                 |
+| Dashboards                  | New XRd dashboards in `grafana/dashboards/xrd/`; existing dashboards untouched            | Preserves upstream gnp-stack dashboards; isolates XRd contribution                                                         |
+| Dashboard layout            | Single-pane-of-glass, all rows expanded                                                   | Demo audience sees one screen; no navigation needed                                                                        |
+| Container networking        | Dual-network: `gnp-mgmt` bridge (internal) + `segment-routing_mgmt` macvlan (XRd-facing)  | Avoids subnet conflict; gnmic-ingestor reaches XRd directly; Alloy receives syslog; Grafana accessible from laptop via VPN |
+| Environment switching       | Explicit Makefile targets: `make up` (laptop) / `make up-vm` (VM) using compose overrides | Explicit over implicit; same codebase works on both machines without auto-detection magic                                  |
+| Webhook receiver            | FastAPI (Phase 4, built last)                                                             | Lowest risk; dashboards and alerting proven before integration                                                             |
+| Future NSO integration      | Out of scope for this document                                                            | Author may add NSO + MCP for intended-state comparison after Cisco Live                                                    |
 
 ---
 
@@ -142,7 +143,7 @@ gnp-stack uses **two Docker networks**:
 | `gnp-mgmt` | `gnp-stack_gnp-mgmt`   | bridge             | `192.168.60.0/24` | Internal container-to-container traffic (Prometheus ↔ Grafana ↔ NATS ↔ Loki)  |
 | `xrd-mgmt` | `segment-routing_mgmt` | macvlan (external) | `10.10.20.0/24`   | Direct Layer 2 access to XRd devices; syslog ingestion; remote browser access |
 
-Three containers join both networks:
+Three containers join both networks **in VM mode only**:
 
 | Container        | Needs `xrd-mgmt` because                     | Static macvlan IP                    |
 | ---------------- | -------------------------------------------- | ------------------------------------ |
@@ -151,6 +152,18 @@ Three containers join both networks:
 | `grafana`        | User accesses dashboards from laptop via VPN | `${GRAFANA_MACVLAN_IP:-10.10.20.12}` |
 
 All other containers (`nats`, `prometheus`, `loki`, `gnmic-emitter`) stay on `gnp-mgmt` only.
+
+### What works in each environment
+
+| Feature                   | `make up` (laptop)        | `make up-vm` (VM)        |
+| ------------------------- | ------------------------- | ------------------------ |
+| gNMI telemetry collection | ✅ via VPN                | ✅ direct Layer 2        |
+| Prometheus metrics        | ✅                        | ✅                       |
+| Grafana dashboards        | ✅ at `localhost:3000`    | ✅ at `10.10.20.12:3000` |
+| Loki (running)            | ✅ (no data)              | ✅ (receives syslog)     |
+| Alloy syslog receiver     | ❌ not started            | ✅ at `10.10.20.11:5514` |
+| XRd syslog in log panel   | ❌ XRd can't reach laptop | ✅                       |
+| Grafana alerting          | ✅                        | ✅                       |
 
 **Why not use the same subnet for both networks**: the macvlan driver already owns `10.10.20.0/24` on `ens160`. Creating a bridge with the same subnet causes routing ambiguity on the VM — traffic to XRd devices may be sent to the bridge instead of the macvlan, silently blackholing it.
 
@@ -184,33 +197,58 @@ docker inspect gnp-stack-alloy-1 | grep -A5 'segment-routing_mgmt'
 
 ### 1.1 Makefile
 
-Create `Makefile` at the repo root. Auto-detect container engine:
+Create `Makefile` at the repo root:
 
 ```makefile
 CONTAINER_ENGINE := $(shell command -v podman >/dev/null 2>&1 && echo podman || echo docker)
 COMPOSE          := $(CONTAINER_ENGINE) compose
+COMPOSE_VM       := $(COMPOSE) -f compose.yaml -f compose.override.vm.yaml
 
-.PHONY: up down restart logs ps validate
+.PHONY: help up up-vm down down-vm restart restart-vm logs ps validate
+
+help:
+	@echo "Usage:"
+	@echo "  make up          Laptop mode: gNMI + Prometheus + Grafana + Loki (no syslog)"
+	@echo "  make up-vm       VM mode: full stack + Alloy syslog + macvlan networking"
+	@echo "  make down        Stop laptop-mode stack"
+	@echo "  make down-vm     Stop VM-mode stack (required if started with make up-vm)"
+	@echo "  make restart     Restart laptop-mode stack"
+	@echo "  make restart-vm  Restart VM-mode stack"
+	@echo "  make logs        Follow logs"
+	@echo "  make ps          Show running containers"
+	@echo "  make validate    Check Prometheus targets"
+	@echo ""
+	@echo "Container engine detected: $(CONTAINER_ENGINE)"
 
 up:
- $(COMPOSE) up -d
+	$(COMPOSE) up -d
+
+up-vm:
+	$(COMPOSE_VM) up -d
 
 down:
- $(COMPOSE) down
+	$(COMPOSE) down
+
+down-vm:
+	$(COMPOSE_VM) down
 
 restart: down up
 
+restart-vm: down-vm up-vm
+
 logs:
- $(COMPOSE) logs -f
+	$(COMPOSE) logs -f
 
 ps:
- $(COMPOSE) ps
+	$(COMPOSE) ps
 
 validate:
- @echo "Container engine: $(CONTAINER_ENGINE)"
- @echo "Checking Prometheus metrics..."
- @curl -s http://localhost:9090/api/v1/targets | python3 -m json.tool | grep -E '"health"|"job"'
+	@echo "Container engine: $(CONTAINER_ENGINE)"
+	@echo "Checking Prometheus targets..."
+	@curl -s http://localhost:9090/api/v1/targets | python3 -m json.tool | grep -E '"health"|"job"'
 ```
+
+> **Important**: always use the matching suffix to stop what you started. `make down-vm` after `make up-vm`. Using `make down` after `make up-vm` leaves Alloy running.
 
 ### 1.2 `gnmic/gnmic-ingestor.yaml` — XRd subscriptions
 
@@ -560,23 +598,13 @@ After `make up` on the VM:
 
 **Done when**: Grafana at `:3000` shows the `xrd-sr-overview` dashboard with live metrics from all 8 devices AND syslog lines from XRd appear in the Loki log panel.
 
-### 2.1 `compose.yaml` — Add Loki, Alloy, and dual-network config
+### 2.1 Compose file changes — base and VM override
 
-**Add the `xrd-mgmt` external network** at the bottom of `compose.yaml` alongside the existing `gnp-mgmt` network:
+This phase modifies two files: the base `compose.yaml` (laptop-safe) and the new `compose.override.vm.yaml` (VM-only additions).
 
-```yaml
-networks:
-  gnp-mgmt:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.60.0/24
-  xrd-mgmt:
-    external: true
-    name: segment-routing_mgmt
-```
+#### `compose.yaml` — Add Loki, update Grafana
 
-**Add the new services**:
+Add the Loki service (on `gnp-mgmt` only — no macvlan dependency):
 
 ```yaml
 loki:
@@ -588,45 +616,58 @@ loki:
     - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
   networks:
     - gnp-mgmt
-
-alloy:
-  image: grafana/alloy:v1.8.3
-  ports:
-    - 12345:12345 # Alloy UI (optional, for debugging)
-  volumes:
-    - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
-  command: run /etc/alloy/config.alloy
-  networks:
-    gnp-mgmt: # reaches Loki
-    xrd-mgmt: # XRd devices push syslog here
-      ipv4_address: ${ALLOY_MACVLAN_IP:-10.10.20.11}
-  depends_on:
-    - loki
 ```
 
-**Update the existing `gnmic-ingestor` service** to also join `xrd-mgmt`:
-
-```yaml
-gnmic-ingestor:
-  networks:
-    - gnp-mgmt
-    - xrd-mgmt # direct Layer 2 path to XRd gNMI endpoints
-```
-
-**Update the existing `grafana` service** to join `xrd-mgmt` and depend on `loki`:
+Update the existing `grafana` service to depend on Loki:
 
 ```yaml
 grafana:
-  networks:
-    gnp-mgmt: # reaches Prometheus and Loki
-    xrd-mgmt: # accessible from laptop via VPN
-      ipv4_address: ${GRAFANA_MACVLAN_IP:-10.10.20.12}
   depends_on:
-  depends_on:
-      - loki
+    - loki # add to existing depends_on
 ```
 
-> After these changes, Grafana is reachable at `http://${GRAFANA_MACVLAN_IP:-10.10.20.12}:3000` from the laptop over the DevNet VPN.
+**Do not add Alloy or `xrd-mgmt` to `compose.yaml`.** Those belong in the VM override only.
+
+#### `compose.override.vm.yaml` — New file
+
+Create this file at the repo root (follow the existing `compose.override.yaml.example` convention):
+
+```yaml
+# VM-mode overlay. Used with: make up-vm (= docker compose -f compose.yaml -f compose.override.vm.yaml up -d)
+# Requires the segment-routing_mgmt macvlan network to exist on the Docker host.
+# Do not use on a laptop — that network does not exist there.
+
+networks:
+  xrd-mgmt:
+    external: true
+    name: segment-routing_mgmt
+
+services:
+  gnmic-ingestor:
+    networks:
+      - gnp-mgmt
+      - xrd-mgmt # direct Layer 2 to XRd gNMI endpoints
+
+  alloy:
+    image: grafana/alloy:v1.8.3
+    ports:
+      - 12345:12345 # Alloy UI (debugging)
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+    command: run /etc/alloy/config.alloy
+    networks:
+      gnp-mgmt: # reaches Loki
+      xrd-mgmt: # XRd devices push syslog here
+        ipv4_address: ${ALLOY_MACVLAN_IP:-10.10.20.11}
+    depends_on:
+      - loki
+
+  grafana:
+    networks:
+      gnp-mgmt: # reaches Prometheus and Loki
+      xrd-mgmt: # accessible from laptop via VPN at 10.10.20.12:3000
+        ipv4_address: ${GRAFANA_MACVLAN_IP:-10.10.20.12}
+```
 
 ### 2.2 `loki/loki-config.yaml` — New file
 
@@ -1293,26 +1334,27 @@ All paths confirmed against IOS-XR 25.3.1 via gNMIBuddy unless marked _[to valid
 
 ## Appendix C: File Change Summary per Phase
 
-| File                                                         | Phase | Action                                     |
-| ------------------------------------------------------------ | ----- | ------------------------------------------ |
-| `Makefile`                                                   | 1     | Create                                     |
-| `gnmic/gnmic-ingestor.yaml`                                  | 1     | Modify (add XRd subscriptions and output)  |
-| `gnmic/gnmic-emitter.yaml`                                   | 1     | Modify (add XRd input and processor)       |
-| `compose.yaml`                                               | 2, 4  | Modify (add Loki, Alloy, webhook services) |
-| `loki/loki-config.yaml`                                      | 2     | Create                                     |
-| `alloy/config.alloy`                                         | 2     | Create                                     |
-| `grafana/provisioning/datasource.yaml`                       | 2     | Modify (add Loki datasource)               |
-| `grafana/provisioning/dashboards.yaml`                       | 2     | Modify (add XRd folder)                    |
-| `grafana/dashboards/xrd/xrd-sr-overview.json`                | 2     | Create                                     |
-| `grafana/provisioning/alerting/xrd-contact-points.yaml`      | 3     | Create                                     |
-| `grafana/provisioning/alerting/xrd-alert-rules.yaml`         | 3     | Create                                     |
-| `grafana/provisioning/alerting/xrd-notification-policy.yaml` | 3     | Create                                     |
-| `.env.example`                                               | 3     | Create                                     |
-| `webhook/main.py`                                            | 4     | Create                                     |
-| `webhook/schema.py`                                          | 4     | Create                                     |
-| `webhook/langgraph_client.py`                                | 4     | Create                                     |
-| `webhook/pyproject.toml`                                     | 4     | Create                                     |
-| `webhook/Dockerfile`                                         | 4     | Create                                     |
+| File                                                         | Phase | Action                                                |
+| ------------------------------------------------------------ | ----- | ----------------------------------------------------- |
+| `Makefile`                                                   | 1     | Create                                                |
+| `gnmic/gnmic-ingestor.yaml`                                  | 1     | Modify (add XRd subscriptions and output)             |
+| `gnmic/gnmic-emitter.yaml`                                   | 1     | Modify (add XRd input and processor)                  |
+| `compose.yaml`                                               | 2, 4  | Modify (add Loki + Grafana loki dep; webhook service) |
+| `compose.override.vm.yaml`                                   | 2     | Create (Alloy + macvlan networking for VM mode)       |
+| `loki/loki-config.yaml`                                      | 2     | Create                                                |
+| `alloy/config.alloy`                                         | 2     | Create                                                |
+| `grafana/provisioning/datasource.yaml`                       | 2     | Modify (add Loki datasource)                          |
+| `grafana/provisioning/dashboards.yaml`                       | 2     | Modify (add XRd folder)                               |
+| `grafana/dashboards/xrd/xrd-sr-overview.json`                | 2     | Create                                                |
+| `grafana/provisioning/alerting/xrd-contact-points.yaml`      | 3     | Create                                                |
+| `grafana/provisioning/alerting/xrd-alert-rules.yaml`         | 3     | Create                                                |
+| `grafana/provisioning/alerting/xrd-notification-policy.yaml` | 3     | Create                                                |
+| `.env.example`                                               | 3     | Create                                                |
+| `webhook/main.py`                                            | 4     | Create                                                |
+| `webhook/schema.py`                                          | 4     | Create                                                |
+| `webhook/langgraph_client.py`                                | 4     | Create                                                |
+| `webhook/pyproject.toml`                                     | 4     | Create                                                |
+| `webhook/Dockerfile`                                         | 4     | Create                                                |
 
 ---
 
