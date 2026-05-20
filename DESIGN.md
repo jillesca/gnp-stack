@@ -4,7 +4,7 @@
 
 This document is an implementation guide for AI agents. It describes all architectural decisions, file changes, acceptance criteria, and constraints needed to extend the gnp-stack project to support Cisco XRd devices running a Segment Routing topology, add Grafana Loki for log correlation, configure alerting, and integrate with an AI-driven network investigation system.
 
-**Do not ask the author for clarification before starting a phase. Every decision is recorded here. If you encounter a constraint not covered, document it in a `BLOCKERS.md` file at the repo root and stop.**
+**If you encounter a constraint not covered, document it in a `BLOCKERS.md` file at the repo root and stop.**
 
 ---
 
@@ -115,45 +115,64 @@ XRd uses Docker macvlan networking (`ens160`, subnet `10.10.20.0/24`, gateway `1
 
 ## Key Design Decisions
 
-| Decision                    | Choice                                                                         | Rationale                                                                        |
-| --------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| Where gnp-stack runs        | Sandbox VM (Docker)                                                            | XRd cannot push syslog to laptop; VM containers can reach XRd via Docker routing |
-| Container engine            | Docker on VM, Podman on laptop; Makefile detects                               | Author uses both environments                                                    |
-| Log ingestion               | Grafana Alloy (syslog receiver) → Loki                                         | Real-time, native Grafana stack, push-based                                      |
-| Log collection method       | XRd pushes syslog to Alloy (UDP)                                               | Pull-based gNMI log polling is not real-time enough for alert correlation        |
-| gNMI path model             | OpenConfig primary + XR native YANG for richer metrics                         | OpenConfig confirmed working on XRd 25.3.1 via gNMIBuddy                         |
-| Alert scenario (primary)    | Interface down → ISIS adjacency cascade                                        | Most compelling demo: one event, visible cascade, agents find root cause         |
-| Alert scenarios (secondary) | BGP session down, SR-TE path failure, vRR peer loss                            | Implement if time allows; alert payload schema supports all                      |
-| Alert payload               | Minimal, generic schema (no node_role hardcoding)                              | gNMIBuddy MCP determines device role dynamically; keeps payload extensible       |
-| Dashboards                  | New XRd dashboards in `grafana/dashboards/xrd/`; existing dashboards untouched | Preserves upstream gnp-stack dashboards; isolates XRd contribution               |
-| Dashboard layout            | Single-pane-of-glass, all rows expanded                                        | Demo audience sees one screen; no navigation needed                              |
-| Webhook receiver            | FastAPI (Phase 4, built last)                                                  | Lowest risk; dashboards and alerting proven before integration                   |
-| Future NSO integration      | Out of scope for this document                                                 | Author may add NSO + MCP for intended-state comparison after Cisco Live          |
+| Decision                    | Choice                                                                                   | Rationale                                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Where gnp-stack runs        | Sandbox VM (Docker)                                                                      | XRd cannot push syslog to laptop; VM containers can reach XRd via Docker routing                                           |
+| Container engine            | Docker on VM, Podman on laptop; Makefile detects                                         | Author uses both environments                                                                                              |
+| Log ingestion               | Grafana Alloy (syslog receiver) → Loki                                                   | Real-time, native Grafana stack, push-based                                                                                |
+| Log collection method       | XRd pushes syslog to Alloy (UDP)                                                         | Pull-based gNMI log polling is not real-time enough for alert correlation                                                  |
+| gNMI path model             | OpenConfig primary + XR native YANG for richer metrics                                   | OpenConfig confirmed working on XRd 25.3.1 via gNMIBuddy                                                                   |
+| Alert scenario (primary)    | Interface down → ISIS adjacency cascade                                                  | Most compelling demo: one event, visible cascade, agents find root cause                                                   |
+| Alert scenarios (secondary) | BGP session down, SR-TE path failure, vRR peer loss                                      | Implement if time allows; alert payload schema supports all                                                                |
+| Alert payload               | Minimal, generic schema (no node_role hardcoding)                                        | gNMIBuddy MCP determines device role dynamically; keeps payload extensible                                                 |
+| Dashboards                  | New XRd dashboards in `grafana/dashboards/xrd/`; existing dashboards untouched           | Preserves upstream gnp-stack dashboards; isolates XRd contribution                                                         |
+| Dashboard layout            | Single-pane-of-glass, all rows expanded                                                  | Demo audience sees one screen; no navigation needed                                                                        |
+| Container networking        | Dual-network: `gnp-mgmt` bridge (internal) + `segment-routing_mgmt` macvlan (XRd-facing) | Avoids subnet conflict; gnmic-ingestor reaches XRd directly; Alloy receives syslog; Grafana accessible from laptop via VPN |
+| Webhook receiver            | FastAPI (Phase 4, built last)                                                            | Lowest risk; dashboards and alerting proven before integration                                                             |
+| Future NSO integration      | Out of scope for this document                                                           | Author may add NSO + MCP for intended-state comparison after Cisco Live                                                    |
 
 ---
 
-## Networking Constraint: Syslog Routing
+## Networking Design
 
-XRd devices live on macvlan network `10.10.20.0/24`. Grafana Alloy runs as a container on the gnp-stack Docker bridge `192.168.60.0/24`.
+gnp-stack uses **two Docker networks**:
 
-**Problem**: XRd cannot reach the VM host IP (`10.10.20.15`) due to macvlan host isolation.
+| Network    | Name                   | Type               | Subnet            | Purpose                                                                       |
+| ---------- | ---------------------- | ------------------ | ----------------- | ----------------------------------------------------------------------------- |
+| `gnp-mgmt` | `gnp-stack_gnp-mgmt`   | bridge             | `192.168.60.0/24` | Internal container-to-container traffic (Prometheus ↔ Grafana ↔ NATS ↔ Loki)  |
+| `xrd-mgmt` | `segment-routing_mgmt` | macvlan (external) | `10.10.20.0/24`   | Direct Layer 2 access to XRd devices; syslog ingestion; remote browser access |
 
-**Solution**: Expose Alloy's syslog port on all interfaces via Docker port binding (`0.0.0.0:5514:5514/udp`). Docker's iptables FORWARD rules allow XRd to route to the gnp-stack bridge network through the VM's routing stack. XRd sends syslog to the gnp-stack bridge gateway IP.
+Three containers join both networks:
 
-**Validation the implementing agent must run on the VM before configuring XRd syslog:**
+| Container        | Needs `xrd-mgmt` because                     | Static macvlan IP                    |
+| ---------------- | -------------------------------------------- | ------------------------------------ |
+| `gnmic-ingestor` | Connects to XRd gNMI (10.10.20.101-108)      | not required (outbound only)         |
+| `alloy`          | XRd devices push syslog to it                | `${ALLOY_MACVLAN_IP:-10.10.20.11}`   |
+| `grafana`        | User accesses dashboards from laptop via VPN | `${GRAFANA_MACVLAN_IP:-10.10.20.12}` |
+
+All other containers (`nats`, `prometheus`, `loki`, `gnmic-emitter`) stay on `gnp-mgmt` only.
+
+**Why not use the same subnet for both networks**: the macvlan driver already owns `10.10.20.0/24` on `ens160`. Creating a bridge with the same subnet causes routing ambiguity on the VM — traffic to XRd devices may be sent to the bridge instead of the macvlan, silently blackholing it.
+
+**Reserved IP ranges on `10.10.20.0/24`**:
+
+- `10.10.20.15` — sandbox VM host
+- `10.10.20.101-108` — XRd devices
+- `10.10.20.254` — macvlan gateway
+- `10.10.20.10-19` — reserved for gnp-stack containers (configurable)
+
+**Validation the implementing agent must run after `make up`:**
 
 ```bash
-# Find the gnp-stack bridge gateway IP (this is what XRd sends syslog to)
-docker network inspect gnp-stack_gnp-mgmt | grep Gateway
+# Confirm gnmic-ingestor can reach XRd devices directly
+docker exec gnmic-ingestor ping -c 3 10.10.20.101
 
-# Verify routing from a container on the gnp-stack network to an XRd device
-docker run --rm --network gnp-stack_gnp-mgmt alpine ping -c 3 10.10.20.101
+# Confirm Alloy has the expected macvlan IP
+docker inspect gnp-stack-alloy-1 | grep -A5 'segment-routing_mgmt'
 
-# From an XRd device, verify it can reach the Alloy syslog port
-# SSH to xrd-1 and run: ping 192.168.60.1 (or whatever gateway IP was found above)
+# From xrd-1, confirm syslog can reach Alloy
+# ssh cisco@10.10.20.101 then: ping 10.10.20.11
 ```
-
-If routing does not work, alternative: use `network_mode: host` for the Alloy container and bind to `0.0.0.0:5514`. XRd sends to any reachable IP on the VM. The gnp-stack container network uses port `5514` (>1024, no root needed).
 
 ---
 
@@ -541,9 +560,23 @@ After `make up` on the VM:
 
 **Done when**: Grafana at `:3000` shows the `xrd-sr-overview` dashboard with live metrics from all 8 devices AND syslog lines from XRd appear in the Loki log panel.
 
-### 2.1 `compose.yaml` — Add Loki and Alloy
+### 2.1 `compose.yaml` — Add Loki, Alloy, and dual-network config
 
-Add the following services to `compose.yaml`:
+**Add the `xrd-mgmt` external network** at the bottom of `compose.yaml` alongside the existing `gnp-mgmt` network:
+
+```yaml
+networks:
+  gnp-mgmt:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.60.0/24
+  xrd-mgmt:
+    external: true
+    name: segment-routing_mgmt
+```
+
+**Add the new services**:
 
 ```yaml
 loki:
@@ -559,25 +592,41 @@ loki:
 alloy:
   image: grafana/alloy:v1.8.3
   ports:
-    - 5514:5514/udp # XRd syslog receiver (UDP)
-    - 5514:5514/tcp # XRd syslog receiver (TCP fallback)
     - 12345:12345 # Alloy UI (optional, for debugging)
   volumes:
     - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
   command: run /etc/alloy/config.alloy
   networks:
-    - gnp-mgmt
+    gnp-mgmt: # reaches Loki
+    xrd-mgmt: # XRd devices push syslog here
+      ipv4_address: ${ALLOY_MACVLAN_IP:-10.10.20.11}
   depends_on:
     - loki
 ```
 
-Also update the `grafana` service to depend on `loki`:
+**Update the existing `gnmic-ingestor` service** to also join `xrd-mgmt`:
+
+```yaml
+gnmic-ingestor:
+  networks:
+    - gnp-mgmt
+    - xrd-mgmt # direct Layer 2 path to XRd gNMI endpoints
+```
+
+**Update the existing `grafana` service** to join `xrd-mgmt` and depend on `loki`:
 
 ```yaml
 grafana:
+  networks:
+    gnp-mgmt: # reaches Prometheus and Loki
+    xrd-mgmt: # accessible from laptop via VPN
+      ipv4_address: ${GRAFANA_MACVLAN_IP:-10.10.20.12}
   depends_on:
-    - loki # add to existing depends_on if any
+  depends_on:
+      - loki
 ```
+
+> After these changes, Grafana is reachable at `http://${GRAFANA_MACVLAN_IP:-10.10.20.12}:3000` from the laptop over the DevNet VPN.
 
 ### 2.2 `loki/loki-config.yaml` — New file
 
@@ -651,7 +700,7 @@ loki.source.syslog "xrd_syslog" {
 }
 ```
 
-> **Networking note**: After `make up`, run the validation commands from the Networking Constraint section above to confirm XRd can route to the Alloy container's port 5514. The bridge gateway IP found from `docker network inspect gnp-stack_gnp-mgmt` is the syslog destination for XRd.
+> Alloy listens on all interfaces on port `5514`. XRd devices send syslog directly to Alloy's macvlan IP (`${ALLOY_MACVLAN_IP:-10.10.20.11}`) — no port-binding or host-level routing needed.
 
 ### 2.4 XRd syslog configuration
 
@@ -660,18 +709,21 @@ Apply to all 8 XRd devices. Replace `<ALLOY_GATEWAY_IP>` with the bridge gateway
 IOS-XR syslog config (add to each device's running config or startup config):
 
 ```
-logging <ALLOY_GATEWAY_IP> vrf default severity warnings port 5514
+logging 10.10.20.11 vrf default severity warnings port 5514
 logging source-interface MgmtEth0/RP0/CPU0/0
 ```
 
-Apply via Ansible or manually via SSH. To apply via SSH:
+Replace `10.10.20.11` with `${ALLOY_MACVLAN_IP}` if you changed the default. Apply via Ansible or manually via SSH:
 
 ```bash
-ssh cisco@10.10.20.101 "conf t
-logging <ALLOY_GATEWAY_IP> vrf default severity warnings port 5514
+ALLOY_IP=${ALLOY_MACVLAN_IP:-10.10.20.11}
+for IP in 10.10.20.10{1..8}; do
+  ssh cisco@$IP "conf t
+logging $ALLOY_IP vrf default severity warnings port 5514
 logging source-interface MgmtEth0/RP0/CPU0/0
 commit
 end"
+done
 ```
 
 Repeat for IPs `10.10.20.102` through `10.10.20.108`.
@@ -961,6 +1013,11 @@ Create `.env.example` at repo root:
 # In Phase 3: use https://webhook.site for testing
 # In Phase 4: use http://<laptop-ip>:8080/alert
 WEBHOOK_RECEIVER_URL=https://webhook.site/your-test-id
+
+# Static IPs for gnp-stack containers on the XRd macvlan network (10.10.20.0/24)
+# Must not conflict with XRd devices (101-108), VM host (15), or gateway (254)
+ALLOY_MACVLAN_IP=10.10.20.11
+GRAFANA_MACVLAN_IP=10.10.20.12
 ```
 
 ### 3.3 Validation — Phase 3
