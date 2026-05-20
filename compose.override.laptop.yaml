@@ -1,0 +1,19 @@
+# Laptop-mode overlay. Used with: make up-laptop
+# Adds Alloy for syslog ingestion bound to gnp-mgmt only (no macvlan).
+# XRd devices must send syslog to LAPTOP_IP:5514 — ansible-helper/xrd_apply_config.yaml
+# already targets 192.168.254.11:5514 (set LAPTOP_IP env var to override).
+
+services:
+  alloy:
+    image: grafana/alloy:v1.8.3
+    ports:
+      - "${LAPTOP_IP:-0.0.0.0}:${SYSLOG_PORT:-5514}:5514/udp"
+      - "${LAPTOP_IP:-0.0.0.0}:${SYSLOG_PORT:-5514}:5514/tcp"
+      - "12345:12345"
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+    command: run --server.http.listen-addr=0.0.0.0:12345 /etc/alloy/config.alloy
+    networks:
+      - gnp-mgmt
+    depends_on:
+      - loki

@@ -97,6 +97,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=grafana
       - GF_UNIFIED_ALERTING_ENABLED=true
       - WEBHOOK_RECEIVER_URL=${WEBHOOK_RECEIVER_URL:-https://webhook.site/your-test-id}
+      - LOKI_URL=${LOKI_URL:-http://loki:3100}
     volumes:
       - ./grafana/provisioning/datasource.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
       - ./grafana/provisioning/dashboards.yaml:/etc/grafana/provisioning/dashboards/default.yaml:ro
