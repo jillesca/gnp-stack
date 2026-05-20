@@ -304,7 +304,7 @@ outputs:
       description: xrd telemetry data to be processed mid pipeline
       subjects: []
       storage: memory
-      max-bytes: 2000000000
+      max-bytes: 268435456
     subject-format: subscription.target
     connect-time-wait: 2s
     format: event
@@ -327,7 +327,7 @@ outputs:
       description: srl telemetry data to be processed mid pipeline
       subjects: []
       storage: memory
-      max-bytes: 2000000000
+      max-bytes: 268435456
     subject-format: subscription.target
     connect-time-wait: 2s
     format: event
@@ -350,7 +350,7 @@ outputs:
       description: eos telemetry data to be processed mid pipeline
       subjects: []
       storage: memory
-      max-bytes: 2000000000
+      max-bytes: 268435456
     subject-format: subscription.target
     connect-time-wait: 2s
     format: event

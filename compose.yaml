@@ -96,9 +96,11 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=grafana
       - GF_UNIFIED_ALERTING_ENABLED=true
+      - WEBHOOK_RECEIVER_URL=${WEBHOOK_RECEIVER_URL:-https://webhook.site/your-test-id}
     volumes:
       - ./grafana/provisioning/datasource.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
       - ./grafana/provisioning/dashboards.yaml:/etc/grafana/provisioning/dashboards/default.yaml:ro
+      - ./grafana/provisioning/alerting/:/etc/grafana/provisioning/alerting/:ro
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
       - ./grafana/plugins/:/var/lib/grafana/plugins/
     ports:
