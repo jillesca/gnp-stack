@@ -1,0 +1,24 @@
+---
+- name: Add logging configuration to XRd DevNet Sandbox.
+  hosts: xr
+  gather_facts: false
+
+  vars:
+    ansible_command_timeout: 60
+    # Disable platform detection to avoid 'show inventory' command
+    ansible_network_os: cisco.iosxr.iosxr
+    ansible_iosxr_use_proxy: false
+    # Force disable facts gathering and platform detection
+    ansible_gather_subset: "!all"
+    ansible_facts_modules: []
+    # Skip device platform detection entirely
+    ansible_iosxr_skip_platform_detection: true
+
+  tasks:
+    - name: Configure logging hostname prefix
+      cisco.iosxr.iosxr_config:
+        lines:
+          - logging hostnameprefix {{ inventory_hostname }}
+          - logging format rfc5424
+          - logging 10.10.20.11 port 5514
+        backup: no
