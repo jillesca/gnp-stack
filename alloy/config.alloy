@@ -1,4 +1,6 @@
 // Grafana Alloy configuration for XRd syslog ingestion
+// XRd configured with: logging format rfc5424
+//                      logging hostnameprefix xrd-N  (per device)
 
 loki.write "default" {
   endpoint {
@@ -6,20 +8,39 @@ loki.write "default" {
   }
 }
 
+// Promote __syslog_message_hostname to a proper label so Loki can filter by device.
+// All __ prefixed labels are dropped by loki.source.syslog before forwarding unless
+// remapped here via relabel_rules.
+loki.relabel "syslog_labels" {
+  rule {
+    source_labels = ["__syslog_message_hostname"]
+    target_label  = "hostname"
+  }
+  forward_to = []
+}
+
 loki.source.syslog "xrd_syslog" {
+  relabel_rules = loki.relabel.syslog_labels.rules
+
   listener {
-    address             = "0.0.0.0:5514"
-    protocol            = "udp"
-    use_rfc5424_message = true
+    address                = "0.0.0.0:5514"
+    protocol               = "udp"
+    syslog_format          = "rfc5424"
+    use_rfc5424_message    = true
+    use_incoming_timestamp = true
+    label_structured_data  = true
     labels = {
       job    = "xrd-syslog",
       source = "xrd",
     }
   }
   listener {
-    address             = "0.0.0.0:5514"
-    protocol            = "tcp"
-    use_rfc5424_message = true
+    address                = "0.0.0.0:5514"
+    protocol               = "tcp"
+    syslog_format          = "rfc5424"
+    use_rfc5424_message    = true
+    use_incoming_timestamp = true
+    label_structured_data  = true
     labels = {
       job    = "xrd-syslog",
       source = "xrd",
