@@ -5,7 +5,7 @@
       .node-label { fill: #ffffff; font-family: 'Segoe UI', sans-serif; font-size: 22px; font-weight: bold; text-anchor: middle; dominant-baseline: central; }
       .node-role { fill: #aaaacc; font-family: 'Segoe UI', sans-serif; font-size: 13px; text-anchor: middle; dominant-baseline: central; }
       .link { stroke-width: 3.5; fill: none; }
-      .port-label { fill: #88ddff; font-family: 'Segoe UI', sans-serif; font-size: 13px; font-weight: bold; text-anchor: middle; dominant-baseline: central; }
+      .port-label { fill: #88ddff; font-family: 'Segoe UI', sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; dominant-baseline: central; }
     </style>
   </defs>
 
@@ -127,9 +127,9 @@
   <!-- ═══════════════════ LEGEND ═══════════════════ -->
   <rect x="18" y="18" width="140" height="90" fill="#1a1a2e" stroke="#4a4a6a" rx="4"/>
   <circle cx="38" cy="40" r="8" fill="#4BDD33"/>
-  <text x="55" y="44" fill="#ccc" font-size="14" font-family="sans-serif">Link UP</text>
+  <text x="55" y="44" fill="#ccc" font-size="20" font-family="sans-serif">Link UP</text>
   <circle cx="38" cy="64" r="8" fill="#FF3154"/>
-  <text x="55" y="68" fill="#ccc" font-size="14" font-family="sans-serif">Link DOWN</text>
+  <text x="55" y="68" fill="#ccc" font-size="20" font-family="sans-serif">Link DOWN</text>
   <circle cx="38" cy="88" r="8" fill="#808080"/>
-  <text x="55" y="92" fill="#ccc" font-size="14" font-family="sans-serif">No data</text>
+  <text x="55" y="92" fill="#ccc" font-size="20" font-family="sans-serif">No data</text>
 </svg>
