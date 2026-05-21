@@ -1689,7 +1689,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": true
       },
-      "title": "XRd Syslog \u2014 Notice and above",
+      "title": "XRd Syslog \u2014 Notice and above (severity \u2264 5)",
       "type": "logs",
       "targets": [
         {
@@ -1697,7 +1697,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{job=\"xrd-syslog\", hostname=~\"$device\", severity=~\"emergency|alert|critical|error|warning|notice\"}",
+          "expr": "{job=\"xrd-syslog\", hostname=~\"$device\"} |~ `%[A-Z0-9_]+-[A-Z0-9_]+-[0-5]-`",
           "legendFormat": "",
           "refId": "A"
         }
