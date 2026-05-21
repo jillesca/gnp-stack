@@ -81,15 +81,8 @@ services:
       retries: 3
       start_period: 10s
 
-  loki:
-    image: grafana/loki:3.5.0
-    ports:
-      - 3100:3100
-    command: -config.file=/etc/loki/loki-config.yaml
-    volumes:
-      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
-    networks:
-      - gnp-mgmt
+  # Loki runs on the remote VM — see vm/compose.yaml and `make vm-deploy`
+  # Grafana queries it via LOKI_URL (default: http://10.10.20.15:3100)
 
   grafana:
     image: grafana/grafana:12.3.5
@@ -97,7 +90,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=grafana
       - GF_UNIFIED_ALERTING_ENABLED=true
       - WEBHOOK_RECEIVER_URL=${WEBHOOK_RECEIVER_URL:-https://webhook.site/your-test-id}
-      - LOKI_URL=${LOKI_URL:-http://loki:3100}
+      - LOKI_URL=${LOKI_URL:-http://10.10.20.15:3100}
     volumes:
       - ./grafana/provisioning/datasource.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
       - ./grafana/provisioning/dashboards.yaml:/etc/grafana/provisioning/dashboards/default.yaml:ro
@@ -108,5 +101,3 @@ services:
       - 3000:3000
     networks:
       gnp-mgmt: {}
-    depends_on:
-      - loki

@@ -9,3 +9,6 @@ policies:
     group_wait: 10s
     group_interval: 5m
     repeat_interval: 1h
+    # TODO: add matchers for event_type once Phase 4 webhook receiver is live.
+    # At that point, non-XRd alerts (Grafana internals) can route to the default
+    # email receiver instead. For now, only XRd rules exist so this is harmless.

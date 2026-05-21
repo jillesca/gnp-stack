@@ -57,80 +57,68 @@ XRd uses Docker macvlan networking (`ens160`, subnet `10.10.20.0/24`, gateway `1
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Sandbox VM (10.10.20.15)  —  runs gnp-stack + XRd      │
+│  Sandbox VM (10.10.20.15)  —  XRd containers + syslog   │
 │                                                          │
-│  ┌──────────┐  gNMI (57777)   ┌─────────────────────┐  │
-│  │  XRd 1-8 │ ──────────────> │  gnmic-ingestor      │  │
-│  │ 10.10.20 │                 │  (OpenConfig + XR    │  │
-│  │ .101-108 │  syslog UDP     │   native YANG paths) │  │
-│  │          │ ──────────────> │  gnmic-emitter       │  │
-│  └──────────┘                 └──────────┬──────────-─┘  │
-│                                          │ NATS JetStream│
-│                               ┌──────────▼────────────┐  │
-│                               │  NATS (stream: xrd)   │  │
-│                               └──────────┬────────────┘  │
-│                                          │               │
-│                               ┌──────────▼────────────┐  │
-│                               │  Prometheus            │  │
-│                               │  (remote write)        │  │
-│                               └──────────┬────────────┘  │
-│                                          │               │
-│  ┌──────────────────────────────────────▼────────────┐  │
-│  │  Grafana (port 3000)                               │  │
-│  │  - Prometheus datasource (metrics)                 │  │
-│  │  - Loki datasource (logs)                          │  │
-│  │  - Dashboard: xrd-sr-overview                      │  │
-│  │  - Alert rules → webhook contact point             │  │
-│  └────────────────────────────────────────────────────┘  │
-│                                                          │
-│  ┌────────────────┐   syslog UDP    ┌────────────────┐  │
-│  │  XRd devices   │ ─────────────>  │  Grafana Alloy │  │
-│  └────────────────┘                 │  (syslog recv) │  │
-│                                     └───────┬────────┘  │
-│                                             │ push       │
-│                                     ┌───────▼────────┐  │
-│                                     │  Loki          │  │
-│                                     └────────────────┘  │
+│  ┌──────────┐  syslog UDP     ┌────────────────────┐   │
+│  │  XRd 1-8 │ ─────────────>  │  Grafana Alloy      │   │
+│  │ 10.10.20 │                 │  10.10.20.11:5514   │   │
+│  │ .101-108 │                 └─────────┬──────────┘   │
+│  └──────────┘                           │ push          │
+│                               ┌─────────▼──────────┐   │
+│                               │  Loki  :3100        │   │
+│                               │  (exposed to VPN)   │   │
+│                               └────────────────────-┘   │
 └─────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────┐
-│  Laptop (user's macOS)                                   │
+         gNMI (57777) ↑              Loki remote read ↓
+┌─────────────────────────────────────────────────────────┐
+│  Laptop (user's macOS)  —  `make up`                    │
 │                                                          │
-│  ┌────────────────────────────────────────────────────┐  │
-│  │  sp_oncall (LangGraph + gNMIBuddy MCP)             │  │
-│  │  - Receives webhook alert                           │  │
-│  │  - Agents investigate devices via gNMIBuddy         │  │
-│  └──────────────────────┬─────────────────────────────┘  │
-│                         │ webhook POST                   │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  gnmic-ingestor → NATS → gnmic-emitter           │   │
+│  │  (gNMI subscriptions to XRd 10.10.20.101-108)    │   │
+│  └──────────────────────┬───────────────────────────┘   │
+│                         │ remote_write                   │
+│  ┌──────────────────────▼───────────────────────────┐   │
+│  │  Prometheus  :9090                               │   │
+│  └──────────────────────┬───────────────────────────┘   │
 │                         │                               │
-│  ┌──────────────────────▼─────────────────────────────┐  │
-│  │  Webhook Receiver (FastAPI)  [Phase 4]             │  │
-│  │  - Translates Grafana payload → alert schema        │  │
-│  │  - Kicks off LangGraph thread                       │  │
-│  └────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────┘
+│  ┌──────────────────────▼───────────────────────────┐   │
+│  │  Grafana  :3000                                  │   │
+│  │  - Prometheus datasource (metrics, local)         │   │
+│  │  - Loki datasource → http://10.10.20.15:3100      │   │
+│  │  - Dashboard: xrd-sr-overview                     │   │
+│  │  - Alert rules → webhook contact point            │   │
+│  └──────────────────────┬───────────────────────────┘   │
+│                         │ webhook POST                   │
+│  ┌──────────────────────▼───────────────────────────┐   │
+│  │  sp_oncall (LangGraph + gNMIBuddy MCP)           │   │
+│  │  Webhook Receiver (FastAPI) [Phase 4]            │   │
+│  └──────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
 ```
+
+> **Deployment modes**: The primary mode is **split mode** — Alloy+Loki on the VM (close to XRd, syslog reachable), everything else on the laptop. A **full-VM mode** (`make up-vm`) also exists but requires more RAM. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed setup steps.
 
 ---
 
 ## Key Design Decisions
 
-| Decision                    | Choice                                                                                    | Rationale                                                                                                                  |
-| --------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Where gnp-stack runs        | Sandbox VM (Docker)                                                                       | XRd cannot push syslog to laptop; VM containers can reach XRd via Docker routing                                           |
-| Container engine            | Docker on VM, Podman on laptop; Makefile detects                                          | Author uses both environments                                                                                              |
-| Log ingestion               | Grafana Alloy (syslog receiver) → Loki                                                    | Real-time, native Grafana stack, push-based                                                                                |
-| Log collection method       | XRd pushes syslog to Alloy (UDP)                                                          | Pull-based gNMI log polling is not real-time enough for alert correlation                                                  |
-| gNMI path model             | OpenConfig primary + XR native YANG for richer metrics                                    | OpenConfig confirmed working on XRd 25.3.1 via gNMIBuddy                                                                   |
-| Alert scenario (primary)    | Interface down → ISIS adjacency cascade                                                   | Most compelling demo: one event, visible cascade, agents find root cause                                                   |
-| Alert scenarios (secondary) | BGP session down, SR-TE path failure, vRR peer loss                                       | Implement if time allows; alert payload schema supports all                                                                |
-| Alert payload               | Minimal, generic schema (no node_role hardcoding)                                         | gNMIBuddy MCP determines device role dynamically; keeps payload extensible                                                 |
-| Dashboards                  | New XRd dashboards in `grafana/dashboards/xrd/`; existing dashboards untouched            | Preserves upstream gnp-stack dashboards; isolates XRd contribution                                                         |
-| Dashboard layout            | Single-pane-of-glass, all rows expanded                                                   | Demo audience sees one screen; no navigation needed                                                                        |
-| Container networking        | Dual-network: `gnp-mgmt` bridge (internal) + `segment-routing_mgmt` macvlan (XRd-facing)  | Avoids subnet conflict; gnmic-ingestor reaches XRd directly; Alloy receives syslog; Grafana accessible from laptop via VPN |
-| Environment switching       | Explicit Makefile targets: `make up` (laptop) / `make up-vm` (VM) using compose overrides | Explicit over implicit; same codebase works on both machines without auto-detection magic                                  |
-| Webhook receiver            | FastAPI (Phase 4, built last)                                                             | Lowest risk; dashboards and alerting proven before integration                                                             |
-| Future NSO integration      | Out of scope for this document                                                            | Author may add NSO + MCP for intended-state comparison after Cisco Live                                                    |
+| Decision                    | Choice                                                                                                                          | Rationale                                                                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Where gnp-stack runs        | **Split mode** (primary): Alloy+Loki on VM, gnmic/NATS/Prometheus/Grafana on laptop. Full-VM mode also available (`make up-vm`) | VM RAM constraint: 8 routers + telemetry stack is too heavy for one host. Syslog must reach Alloy via macvlan, which only works on the VM side. |
+| Container engine            | Docker on VM, Podman on laptop; Makefile detects                                                                                | Author uses both environments                                                                                                                   |
+| Log ingestion               | Grafana Alloy (syslog receiver) → Loki                                                                                          | Real-time, native Grafana stack, push-based                                                                                                     |
+| Log collection method       | XRd pushes syslog to Alloy (UDP)                                                                                                | Pull-based gNMI log polling is not real-time enough for alert correlation                                                                       |
+| gNMI path model             | OpenConfig primary + XR native YANG for richer metrics                                                                          | OpenConfig confirmed working on XRd 25.3.1 via gNMIBuddy                                                                                        |
+| Alert scenario (primary)    | Interface down → ISIS adjacency cascade                                                                                         | Most compelling demo: one event, visible cascade, agents find root cause                                                                        |
+| Alert scenarios (secondary) | BGP session down, SR-TE path failure, vRR peer loss                                                                             | Implement if time allows; alert payload schema supports all                                                                                     |
+| Alert payload               | Minimal, generic schema (no node_role hardcoding)                                                                               | gNMIBuddy MCP determines device role dynamically; keeps payload extensible                                                                      |
+| Dashboards                  | New XRd dashboards in `grafana/dashboards/xrd/`; existing dashboards untouched                                                  | Preserves upstream gnp-stack dashboards; isolates XRd contribution                                                                              |
+| Dashboard layout            | Single-pane-of-glass, all rows expanded                                                                                         | Demo audience sees one screen; no navigation needed                                                                                             |
+| Container networking        | Dual-network: `gnp-mgmt` bridge (internal) + `segment-routing_mgmt` macvlan (XRd-facing)                                        | Avoids subnet conflict; gnmic-ingestor reaches XRd directly; Alloy receives syslog; Grafana accessible from laptop via VPN                      |
+| Environment switching       | Explicit Makefile targets: `make up` (laptop) / `make up-vm` (VM) using compose overrides                                       | Explicit over implicit; same codebase works on both machines without auto-detection magic                                                       |
+| Webhook receiver            | FastAPI (Phase 4, built last)                                                                                                   | Lowest risk; dashboards and alerting proven before integration                                                                                  |
+| Future NSO integration      | Out of scope for this document                                                                                                  | Author may add NSO + MCP for intended-state comparison after Cisco Live                                                                         |
 
 ---
 
@@ -151,19 +139,29 @@ Three containers join both networks **in VM mode only**:
 | `alloy`          | XRd devices push syslog to it                | `${ALLOY_MACVLAN_IP:-10.10.20.11}`   |
 | `grafana`        | User accesses dashboards from laptop via VPN | `${GRAFANA_MACVLAN_IP:-10.10.20.12}` |
 
-All other containers (`nats`, `prometheus`, `loki`, `gnmic-emitter`) stay on `gnp-mgmt` only.
+All other containers (`nats`, `prometheus`, `gnmic-emitter`) stay on `gnp-mgmt` only. In split mode Loki is not present in the laptop stack at all — Grafana queries it remotely.
+
+### Deployment modes
+
+| Mode                | Command                         | Where things run                                          |
+| ------------------- | ------------------------------- | --------------------------------------------------------- |
+| **Split** (primary) | `make vm-deploy` then `make up` | Alloy+Loki on VM; gnmic/NATS/Prometheus/Grafana on laptop |
+| Full-VM             | `make up-vm` (on the VM)        | Everything on the VM including Alloy+Loki                 |
+| Laptop-only         | `make up` with no VM syslog     | Full stack on laptop; Loki present but empty              |
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for step-by-step instructions for each mode.
 
 ### What works in each environment
 
-| Feature                   | `make up` (laptop)        | `make up-vm` (VM)        |
-| ------------------------- | ------------------------- | ------------------------ |
-| gNMI telemetry collection | ✅ via VPN                | ✅ direct Layer 2        |
-| Prometheus metrics        | ✅                        | ✅                       |
-| Grafana dashboards        | ✅ at `localhost:3000`    | ✅ at `10.10.20.12:3000` |
-| Loki (running)            | ✅ (no data)              | ✅ (receives syslog)     |
-| Alloy syslog receiver     | ❌ not started            | ✅ at `10.10.20.11:5514` |
-| XRd syslog in log panel   | ❌ XRd can't reach laptop | ✅                       |
-| Grafana alerting          | ✅                        | ✅                       |
+| Feature                   | Split mode (primary)        | Full-VM mode (`make up-vm`) |
+| ------------------------- | --------------------------- | --------------------------- |
+| gNMI telemetry collection | ✅ via VPN                  | ✅ direct Layer 2           |
+| Prometheus metrics        | ✅ laptop                   | ✅ VM                       |
+| Grafana dashboards        | ✅ `localhost:3000`         | ✅ `10.10.20.12:3000`       |
+| Loki log storage          | ✅ VM `:3100` (remote)      | ✅ VM (local to stack)      |
+| Alloy syslog receiver     | ✅ `10.10.20.11:5514` on VM | ✅ `10.10.20.11:5514` on VM |
+| XRd syslog in log panel   | ✅                          | ✅                          |
+| Grafana alerting          | ✅                          | ✅                          |
 
 **Why not use the same subnet for both networks**: the macvlan driver already owns `10.10.20.0/24` on `ens160`. Creating a bridge with the same subnet causes routing ambiguity on the VM — traffic to XRd devices may be sent to the bridge instead of the macvlan, silently blackholing it.
 
