@@ -21,3 +21,15 @@ A single up→down or down→up transition on a physical interface. Measured wit
 
 **Subscription**
 A gNMI stream configured in `gnmic-ingestor.yaml` that collects a specific YANG path from one or more XRd targets and forwards it to NATS JetStream. Each subscription has a mode (stream/sample), a sample-interval, and a list of target paths.
+
+**Topology Matrix**
+A table panel where rows represent source devices and columns represent a topology dimension (interface names, neighbor devices, or BGP peer IPs). Cell colour encodes state: green=UP/ESTABLISHED, red=DOWN, gray=not applicable. Provides at-a-glance topology health without reading individual time series.
+
+**Static Label Mapping**
+A PromQL `label_replace` pattern that derives human-readable labels (e.g., device names) from raw telemetry identifiers (e.g., ISIS system IDs). Called "static" because the mapping is hardcoded in the query and must be updated manually when the topology changes. See ADR-001.
+
+**Grouping-to-Matrix Transformation**
+A Grafana transformation (`groupingToMatrix`) that pivots flat table data (row-per-series) into a matrix layout by specifying which field becomes the row key, which becomes column headers, and which provides cell values.
+
+**strings-as-labels**
+A gnmic emitter setting (`strings-as-labels: true`) that promotes string-typed YANG leaves to Prometheus labels rather than dropping them. This is what makes labels like `local_interface`, `neighbor_neighbor_system_id`, and `neighbor_neighbor_address` available for matrix queries.

@@ -746,6 +746,570 @@
         "x": 0,
         "y": 22
       },
+      "id": 299,
+      "title": "Topology Matrices",
+      "type": "row"
+    },
+    {
+      "id": 300,
+      "title": "Interface State Matrix",
+      "description": "Matrix view: rows=devices, columns=GigabitEthernet interfaces. Green=UP, Red=DOWN, Gray=not present on device.",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "custom": {
+            "cellOptions": {
+              "type": "color-background",
+              "mode": "basic"
+            },
+            "align": "center",
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red",
+                  "index": 0
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green",
+                  "index": 1
+                }
+              }
+            }
+          ],
+          "noValue": "-"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "source\\device"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        },
+        "sortBy": [
+          {
+            "displayName": "source\\device",
+            "desc": false
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name=~\"GigabitEthernet0/0/0/.*\"}",
+          "legendFormat": "__auto",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "editorMode": "code"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "name",
+            "rowField": "source",
+            "valueField": "Value",
+            "emptyValue": "null"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "source\\device",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 301,
+      "title": "Loopback State Matrix",
+      "description": "Matrix view: rows=devices, columns=Loopback interfaces. Green=UP, Red=DOWN.",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "custom": {
+            "cellOptions": {
+              "type": "color-background",
+              "mode": "basic"
+            },
+            "align": "center",
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red",
+                  "index": 0
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green",
+                  "index": 1
+                }
+              }
+            }
+          ],
+          "noValue": "-"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "source\\device"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        },
+        "sortBy": [
+          {
+            "displayName": "source\\device",
+            "desc": false
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name=~\"Loopback.*\"}",
+          "legendFormat": "__auto",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "editorMode": "code"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "name",
+            "rowField": "source",
+            "valueField": "Value",
+            "emptyValue": "null"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "source\\device",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 302,
+      "title": "ISIS Neighborship Matrix",
+      "description": "Matrix view: rows=source device, columns=neighbor device (derived from ISIS system ID). Green=adjacency UP, Red=DOWN. Requires system IDs follow pattern 0100.0100.010X.",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "custom": {
+            "cellOptions": {
+              "type": "color-background",
+              "mode": "basic"
+            },
+            "align": "center",
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red",
+                  "index": 0
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green",
+                  "index": 1
+                }
+              }
+            }
+          ],
+          "noValue": "-"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "source\\device"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        },
+        "sortBy": [
+          {
+            "displayName": "source\\device",
+            "desc": false
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "max by (source, neighbor_device) (  label_replace(    Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=~\"$device\"},    \"neighbor_device\", \"xrd-$1\", \"neighbor_neighbor_system_id\", \"0100\\\\.0100\\\\.010(.)\"  ))",
+          "legendFormat": "__auto",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "editorMode": "code"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "neighbor_device",
+            "rowField": "source",
+            "valueField": "Value",
+            "emptyValue": "null"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "source\\neighbor_device",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 303,
+      "title": "BGP Sessions (iBGP Hub-and-Spoke)",
+      "description": "Matrix view: rows=source device, columns=BGP peer IP address. Green=ESTABLISHED, Red=not established. Pattern reveals hub-and-spoke topology (most devices peer only to vRR xrd-8).",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "custom": {
+            "cellOptions": {
+              "type": "color-background",
+              "mode": "basic"
+            },
+            "align": "center",
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "NOT ESTAB",
+                  "color": "red",
+                  "index": 0
+                },
+                "1": {
+                  "text": "ESTAB",
+                  "color": "green",
+                  "index": 1
+                }
+              }
+            }
+          ],
+          "noValue": "-"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "source\\device"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        },
+        "sortBy": [
+          {
+            "displayName": "source\\device",
+            "desc": false
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "max by (source, neighbor_neighbor_address) (  Cisco_IOS_XR_ipv4_bgp_oper_bgp_instances_instance_instance_active_default_vrf_neighbors_neighbor_connection_state{source=~\"$device\"})",
+          "legendFormat": "__auto",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "editorMode": "code"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "neighbor_neighbor_address",
+            "rowField": "source",
+            "valueField": "Value",
+            "emptyValue": "null"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "source\\neighbor_neighbor_address",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
       "id": 10,
       "title": "Interfaces",
       "type": "row"
@@ -799,7 +1363,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 23
+        "y": 40
       },
       "id": 12,
       "options": {
@@ -852,7 +1416,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 23
+        "y": 40
       },
       "id": 13,
       "options": {
@@ -893,7 +1457,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 29
+        "y": 46
       },
       "fieldConfig": {
         "defaults": {
@@ -964,7 +1528,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 29
+        "y": 46
       },
       "fieldConfig": {
         "defaults": {
@@ -1026,7 +1590,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 52
       },
       "fieldConfig": {
         "defaults": {
@@ -1103,7 +1667,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 58
       },
       "id": 20,
       "title": "ISIS",
@@ -1188,7 +1752,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 59
       },
       "id": 21,
       "options": {
@@ -1221,15 +1785,6 @@
           "editorMode": "code"
         }
       ],
-      "transformations": [
-        {
-          "id": "labelsToFields",
-          "options": {
-            "valueLabel": "neighbor_state",
-            "mode": "columns"
-          }
-        }
-      ],
       "description": "UP=1, DOWN=0. Each line is a device\u2192neighbour pair. Filter by device to focus on specific adjacencies."
     },
     {
@@ -1238,7 +1793,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 67
       },
       "id": 30,
       "title": "BGP",
@@ -1291,7 +1846,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 45
+        "y": 68
       },
       "id": 31,
       "options": {
@@ -1346,7 +1901,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 45
+        "y": 68
       },
       "id": 32,
       "options": {
@@ -1387,7 +1942,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 45
+        "y": 68
       },
       "fieldConfig": {
         "defaults": {
@@ -1448,7 +2003,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 53
+        "y": 76
       },
       "fieldConfig": {
         "defaults": {
@@ -1503,7 +2058,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 61
+        "y": 84
       },
       "id": 40,
       "title": "Segment Routing",
@@ -1532,7 +2087,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 62
+        "y": 85
       },
       "id": 41,
       "options": {
@@ -1584,7 +2139,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 62
+        "y": 85
       },
       "id": 42,
       "options": {
@@ -1626,7 +2181,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 70
+        "y": 93
       },
       "fieldConfig": {
         "defaults": {
@@ -1680,7 +2235,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 70
+        "y": 93
       },
       "fieldConfig": {
         "defaults": {
@@ -1727,7 +2282,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 78
+        "y": 101
       },
       "id": 50,
       "title": "System Health",
@@ -1758,7 +2313,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 79
+        "y": 102
       },
       "id": 51,
       "options": {
@@ -1812,7 +2367,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 79
+        "y": 102
       },
       "id": 52,
       "options": {
@@ -1849,7 +2404,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 87
+        "y": 110
       },
       "id": 60,
       "title": "Logs",
@@ -1868,7 +2423,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 88
+        "y": 111
       },
       "id": 61,
       "options": {
