@@ -84,12 +84,36 @@ services:
   # Loki runs on the remote VM — see vm/compose.yaml and `make vm-deploy`
   # Grafana queries it via LOKI_URL (default: http://10.10.20.15:3100)
 
+  webhook-receiver:
+    build: ./webhook
+    ports:
+      - 8080:8080
+    environment:
+      - LANGGRAPH_API_URL=${LANGGRAPH_API_URL:-http://host.docker.internal:2024}
+      - LANGGRAPH_ASSISTANT_ID=${LANGGRAPH_ASSISTANT_ID:-agent}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    networks:
+      - gnp-mgmt
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
   grafana:
     image: grafana/grafana:12.3.5
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=grafana
       - GF_UNIFIED_ALERTING_ENABLED=true
-      - WEBHOOK_RECEIVER_URL=${WEBHOOK_RECEIVER_URL:-https://webhook.site/your-test-id}
+      - WEBHOOK_RECEIVER_URL=${WEBHOOK_RECEIVER_URL:-http://webhook-receiver:8080/alert}
       - LOKI_URL=${LOKI_URL:-http://10.10.20.15:3100}
     volumes:
       - ./grafana/provisioning/datasource.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
