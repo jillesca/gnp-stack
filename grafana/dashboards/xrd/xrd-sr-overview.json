@@ -822,8 +822,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(openconfig_interfaces_interface_state_counters_out_octets{source=~\"$device\", name!~\"Loopback.*|MgmtEth.*\"}[1m]) * 8",
-          "legendFormat": "{{source}} {{name}}",
+          "expr": "rate(openconfig_interfaces_interface_state_counters_out_octets{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[1m]) * 8",
+          "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
       ]
@@ -875,8 +875,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(openconfig_interfaces_interface_state_counters_in_octets{source=~\"$device\", name!~\"Loopback.*|MgmtEth.*\"}[1m]) * 8",
-          "legendFormat": "{{source}} {{name}}",
+          "expr": "rate(openconfig_interfaces_interface_state_counters_in_octets{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[1m]) * 8",
+          "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
       ]
@@ -936,8 +936,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(openconfig_interfaces_interface_state_counters_in_errors{source=~\"$device\", name!~\"Loopback.*|MgmtEth.*\"}[5m])",
-          "legendFormat": "{{source}} {{name}} RX errors",
+          "expr": "rate(openconfig_interfaces_interface_state_counters_in_errors{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[5m])",
+          "legendFormat": "{{source}} {{interface_name}} RX errors",
           "refId": "A"
         },
         {
@@ -945,8 +945,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(openconfig_interfaces_interface_state_counters_out_errors{source=~\"$device\", name!~\"Loopback.*|MgmtEth.*\"}[5m])",
-          "legendFormat": "{{source}} {{name}} TX errors",
+          "expr": "rate(openconfig_interfaces_interface_state_counters_out_errors{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[5m])",
+          "legendFormat": "{{source}} {{interface_name}} TX errors",
           "refId": "B"
         }
       ]
@@ -1007,8 +1007,92 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "changes(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name!~\"Loopback.*|MgmtEth.*\"}[$__range])",
-          "legendFormat": "{{source}} {{name}}",
+          "expr": "changes(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[$__range])",
+          "legendFormat": "{{source}} {{interface_name}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 201,
+      "title": "Loopback State",
+      "description": "Up/down state of all Loopback interfaces. A loopback going down can cascade to ISIS, BGP, and other protocol failures.",
+      "type": "state-timeline",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 1
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name=~\"Loopback.*\"}",
+          "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
       ]
@@ -1019,7 +1103,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 41
       },
       "id": 20,
       "title": "ISIS",
@@ -1530,12 +1614,120 @@
       ]
     },
     {
+      "id": 202,
+      "title": "SR-TE Tunnel TX Rate (bps)",
+      "description": "Transmit throughput per SR-TE tunnel. A flat line at 0 means the tunnel is dark (no traffic forwarded).",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 70
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineWidth": 1,
+            "spanNulls": false
+          },
+          "unit": "bps"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "rate(openconfig_interfaces_interface_state_counters_out_octets{source=~\"$device\", interface_name=~\"srte_.*\"}[1m]) * 8",
+          "legendFormat": "{{source}} {{interface_name}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 203,
+      "title": "SR-TE Tunnel RX Rate (bps)",
+      "description": "Receive throughput per SR-TE tunnel.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 70
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineWidth": 1,
+            "spanNulls": false
+          },
+          "unit": "bps"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "rate(openconfig_interfaces_interface_state_counters_in_octets{source=~\"$device\", interface_name=~\"srte_.*\"}[1m]) * 8",
+          "legendFormat": "{{source}} {{interface_name}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 70
+        "y": 78
       },
       "id": 50,
       "title": "System Health",
@@ -1566,7 +1758,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 71
+        "y": 79
       },
       "id": 51,
       "options": {
@@ -1620,7 +1812,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 71
+        "y": 79
       },
       "id": 52,
       "options": {
@@ -1657,7 +1849,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 79
+        "y": 87
       },
       "id": 60,
       "title": "Logs",
@@ -1676,7 +1868,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 80
+        "y": 88
       },
       "id": 61,
       "options": {
@@ -1752,15 +1944,16 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name!~\"Loopback.*|MgmtEth.*\"}, name)",
+        "definition": "label_values(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}, interface_name)",
         "hide": 0,
         "includeAll": true,
+        "label": "Interface",
         "multi": true,
         "name": "interface",
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name!~\"Loopback.*|MgmtEth.*\"}, name)",
+          "query": "label_values(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}, interface_name)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
