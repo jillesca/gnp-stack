@@ -116,7 +116,7 @@ subscriptions:
   xrd-if-stats:
     mode: stream
     stream-mode: sample
-    sample-interval: 10s
+    sample-interval: 30s
     paths:
       - /interfaces/interface[name=*]/state/counters
     outputs:
@@ -200,98 +200,94 @@ subscriptions:
     outputs:
       - nats-xrd-out
 
-  # srl
-  srl-system-performance:
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s
-    paths:
-      - /platform/control[slot=*]/cpu[index=all]/total
-      - /platform/control[slot=*]/memory
-    outputs:
-      - nats-srl-out
-  srl-if-states:
-    mode: stream
-    stream-mode: on_change
-    heartbeat-interval: 5s
-    paths:
-      - /interface[name=ethernet-1/*]/oper-state
-    outputs:
-      - nats-srl-out
-  srl-if-stats:
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s
-    paths:
-      - /interface[name=ethernet-1/*]/statistics
-      - /interface[name=ethernet-1/*]/traffic-rate
-    outputs:
-      - nats-srl-out
-  srl-routes:
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s
-    paths:
-      - /network-instance[name=*]/route-table/ipv4-unicast/statistics/
-      - /network-instance[name=*]/route-table/ipv6-unicast/statistics/
-    outputs:
-      - nats-srl-out
-  srl-bgp:
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s
-    paths:
-      - /network-instance[name=*]/protocols/bgp/statistics
-    outputs:
-      - nats-srl-out
-  srl-bridge:
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s
-    paths:
-      - /network-instance[name=*]/bridge-table/statistics/
-    outputs:
-      - nats-srl-out
-  srl-apps:
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s
-    paths:
-      - /system/app-management/application[name=*]
-    outputs:
-      - nats-srl-out
-  srl-net-instance:
-    mode: stream
-    stream-mode: on_change
-    heartbeat-interval: 5s
-    paths:
-      - /network-instance[name=*]/oper-state
-    outputs:
-      - nats-srl-out
+  # srl subscriptions disabled — no SRL devices in this deployment (XRd only)
+  # srl-system-performance:
+  #   mode: stream
+  #   stream-mode: sample
+  #   sample-interval: 5s
+  #   paths:
+  #     - /platform/control[slot=*]/cpu[index=all]/total
+  #     - /platform/control[slot=*]/memory
+  #   outputs:
+  #     - nats-srl-out
+  # srl-if-states:
+  #   mode: stream
+  #   stream-mode: on_change
+  #   heartbeat-interval: 5s
+  #   paths:
+  #     - /interface[name=ethernet-1/*]/oper-state
+  #   outputs:
+  #     - nats-srl-out
+  # srl-if-stats:
+  #   mode: stream
+  #   stream-mode: sample
+  #   sample-interval: 5s
+  #   paths:
+  #     - /interface[name=ethernet-1/*]/statistics
+  #     - /interface[name=ethernet-1/*]/traffic-rate
+  #   outputs:
+  #     - nats-srl-out
+  # srl-routes:
+  #   mode: stream
+  #   stream-mode: sample
+  #   sample-interval: 5s
+  #   paths:
+  #     - /network-instance[name=*]/route-table/ipv4-unicast/statistics/
+  #     - /network-instance[name=*]/route-table/ipv6-unicast/statistics/
+  #   outputs:
+  #     - nats-srl-out
+  # srl-bgp:
+  #   mode: stream
+  #   stream-mode: sample
+  #   sample-interval: 5s
+  #   paths:
+  #     - /network-instance[name=*]/protocols/bgp/statistics
+  #   outputs:
+  #     - nats-srl-out
+  # srl-bridge:
+  #   mode: stream
+  #   stream-mode: sample
+  #   sample-interval: 5s
+  #   paths:
+  #     - /network-instance[name=*]/bridge-table/statistics/
+  #   outputs:
+  #     - nats-srl-out
+  # srl-apps:
+  #   mode: stream
+  #   stream-mode: sample
+  #   sample-interval: 5s
+  #   paths:
+  #     - /system/app-management/application[name=*]
+  #   outputs:
+  #     - nats-srl-out
+  # srl-net-instance:
+  #   mode: stream
+  #   stream-mode: on_change
+  #   heartbeat-interval: 5s
+  #   paths:
+  #     - /network-instance[name=*]/oper-state
+  #   outputs:
+  #     - nats-srl-out
 
-  # eos
-  eos-if-stats:
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s
-    paths:
-      - /interfaces/interface[name=*]/state/counters
-    outputs:
-      - nats-eos-out
-
-  eos-if-states:
-    mode: stream
-    stream-mode: on_change
-    # heartbeat-interval: 60s
-    #stream-mode: sample
-    #sample-interval: 5s
-    paths:
-      - /interfaces/interface[name=*]/state/admin-status
-      - /interfaces/interface[name=*]/state/oper-status
-      - /interfaces/interface[name=*]/state/last-change
-      - /interfaces/interface[name=*]/state/mtu
-    outputs:
-      - nats-eos-out
+  # eos subscriptions disabled — no EOS devices in this deployment (XRd only)
+  # eos-if-stats:
+  #   mode: stream
+  #   stream-mode: sample
+  #   sample-interval: 5s
+  #   paths:
+  #     - /interfaces/interface[name=*]/state/counters
+  #   outputs:
+  #     - nats-eos-out
+  # eos-if-states:
+  #   mode: stream
+  #   stream-mode: on_change
+  #   paths:
+  #     - /interfaces/interface[name=*]/state/admin-status
+  #     - /interfaces/interface[name=*]/state/oper-status
+  #     - /interfaces/interface[name=*]/state/last-change
+  #     - /interfaces/interface[name=*]/state/mtu
+  #   outputs:
+  #     - nats-eos-out
 
 outputs:
   nats-xrd-out:
@@ -317,51 +313,53 @@ outputs:
     enable-metrics: true
     event-processors: []
 
-  nats-srl-out:
-    type: jetstream
-    name: gnmic-ingress-srl
-    address: nats:4222
-    stream: srl
-    create-stream:
-      retention-policy: workqueue
-      description: srl telemetry data to be processed mid pipeline
-      subjects: []
-      storage: memory
-      max-bytes: 268435456
-    subject-format: subscription.target
-    connect-time-wait: 2s
-    format: event
-    split-events: false
-    override-timestamps: false
-    num-workers: 1
-    write-timeout: 5s
-    debug: false
-    buffer-size: 0
-    enable-metrics: true
-    event-processors: []
+  # nats-srl-out: disabled — no SRL devices; prevents NATS from allocating 256 MB stream in memory
+  # nats-srl-out:
+  #   type: jetstream
+  #   name: gnmic-ingress-srl
+  #   address: nats:4222
+  #   stream: srl
+  #   create-stream:
+  #     retention-policy: workqueue
+  #     description: srl telemetry data to be processed mid pipeline
+  #     subjects: []
+  #     storage: memory
+  #     max-bytes: 268435456
+  #   subject-format: subscription.target
+  #   connect-time-wait: 2s
+  #   format: event
+  #   split-events: false
+  #   override-timestamps: false
+  #   num-workers: 1
+  #   write-timeout: 5s
+  #   debug: false
+  #   buffer-size: 0
+  #   enable-metrics: true
+  #   event-processors: []
 
-  nats-eos-out:
-    type: jetstream
-    name: gnmic-ingress-eos
-    address: nats:4222
-    stream: eos
-    create-stream:
-      retention-policy: workqueue
-      description: eos telemetry data to be processed mid pipeline
-      subjects: []
-      storage: memory
-      max-bytes: 268435456
-    subject-format: subscription.target
-    connect-time-wait: 2s
-    format: event
-    split-events: false
-    override-timestamps: false
-    num-workers: 1
-    write-timeout: 5s
-    debug: false
-    buffer-size: 0
-    enable-metrics: true
-    event-processors: []
+  # nats-eos-out: disabled — no EOS devices; prevents NATS from allocating 256 MB stream in memory
+  # nats-eos-out:
+  #   type: jetstream
+  #   name: gnmic-ingress-eos
+  #   address: nats:4222
+  #   stream: eos
+  #   create-stream:
+  #     retention-policy: workqueue
+  #     description: eos telemetry data to be processed mid pipeline
+  #     subjects: []
+  #     storage: memory
+  #     max-bytes: 268435456
+  #   subject-format: subscription.target
+  #   connect-time-wait: 2s
+  #   format: event
+  #   split-events: false
+  #   override-timestamps: false
+  #   num-workers: 1
+  #   write-timeout: 5s
+  #   debug: false
+  #   buffer-size: 0
+  #   enable-metrics: true
+  #   event-processors: []
 
 api-server:
   address: :7890

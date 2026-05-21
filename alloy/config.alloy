@@ -8,13 +8,18 @@ loki.write "default" {
   }
 }
 
-// Promote __syslog_message_hostname to a proper label so Loki can filter by device.
-// All __ prefixed labels are dropped by loki.source.syslog before forwarding unless
-// remapped here via relabel_rules.
+// Promote internal syslog labels to proper Loki labels so the dashboard can filter by
+// device and severity. All __ prefixed labels are dropped before forwarding unless
+// explicitly remapped here.
 loki.relabel "syslog_labels" {
   rule {
     source_labels = ["__syslog_message_hostname"]
     target_label  = "hostname"
+  }
+  // severity values from RFC5424: emergency|alert|critical|error|warning|notice|informational|debug
+  rule {
+    source_labels = ["__syslog_message_severity"]
+    target_label  = "severity"
   }
   forward_to = []
 }

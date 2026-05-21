@@ -205,45 +205,45 @@ COMPOSE_VM       := $(COMPOSE) -f compose.yaml -f compose.override.vm.yaml
 .PHONY: help up up-vm down down-vm restart restart-vm logs ps validate
 
 help:
-	@echo "Usage:"
-	@echo "  make up          Laptop mode: gNMI + Prometheus + Grafana + Loki (no syslog)"
-	@echo "  make up-vm       VM mode: full stack + Alloy syslog + macvlan networking"
-	@echo "  make down        Stop laptop-mode stack"
-	@echo "  make down-vm     Stop VM-mode stack (required if started with make up-vm)"
-	@echo "  make restart     Restart laptop-mode stack"
-	@echo "  make restart-vm  Restart VM-mode stack"
-	@echo "  make logs        Follow logs"
-	@echo "  make ps          Show running containers"
-	@echo "  make validate    Check Prometheus targets"
-	@echo ""
-	@echo "Container engine detected: $(CONTAINER_ENGINE)"
+ @echo "Usage:"
+ @echo "  make up          Laptop mode: gNMI + Prometheus + Grafana + Loki (no syslog)"
+ @echo "  make up-vm       VM mode: full stack + Alloy syslog + macvlan networking"
+ @echo "  make down        Stop laptop-mode stack"
+ @echo "  make down-vm     Stop VM-mode stack (required if started with make up-vm)"
+ @echo "  make restart     Restart laptop-mode stack"
+ @echo "  make restart-vm  Restart VM-mode stack"
+ @echo "  make logs        Follow logs"
+ @echo "  make ps          Show running containers"
+ @echo "  make validate    Check Prometheus targets"
+ @echo ""
+ @echo "Container engine detected: $(CONTAINER_ENGINE)"
 
 up:
-	$(COMPOSE) up -d
+ $(COMPOSE) up -d
 
 up-vm:
-	$(COMPOSE_VM) up -d
+ $(COMPOSE_VM) up -d
 
 down:
-	$(COMPOSE) down
+ $(COMPOSE) down
 
 down-vm:
-	$(COMPOSE_VM) down
+ $(COMPOSE_VM) down
 
 restart: down up
 
 restart-vm: down-vm up-vm
 
 logs:
-	$(COMPOSE) logs -f
+ $(COMPOSE) logs -f
 
 ps:
-	$(COMPOSE) ps
+ $(COMPOSE) ps
 
 validate:
-	@echo "Container engine: $(CONTAINER_ENGINE)"
-	@echo "Checking Prometheus targets..."
-	@curl -s http://localhost:9090/api/v1/targets | python3 -m json.tool | grep -E '"health"|"job"'
+ @echo "Container engine: $(CONTAINER_ENGINE)"
+ @echo "Checking Prometheus targets..."
+ @curl -s http://localhost:9090/api/v1/targets | python3 -m json.tool | grep -E '"health"|"job"'
 ```
 
 > **Important**: always use the matching suffix to stop what you started. `make down-vm` after `make up-vm`. Using `make down` after `make up-vm` leaves Alloy running.
@@ -600,31 +600,19 @@ After `make up` on the VM:
 
 This phase modifies two files: the base `compose.yaml` (laptop-safe) and the new `compose.override.vm.yaml` (VM-only additions).
 
-#### `compose.yaml` — Add Loki, update Grafana
+#### `compose.yaml` — Update Grafana only (no Loki)
 
-Add the Loki service (on `gnp-mgmt` only — no macvlan dependency):
+**Do not add Loki, Alloy, or `xrd-mgmt` to `compose.yaml`.** Loki only runs on the VM. Running Loki locally on a laptop is wasteful — there is no Alloy feeding it syslog data in that environment.
 
-```yaml
-loki:
-  image: grafana/loki:3.5.0
-  ports:
-    - 3100:3100
-  command: -config.file=/etc/loki/loki-config.yaml
-  volumes:
-    - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
-  networks:
-    - gnp-mgmt
-```
-
-Update the existing `grafana` service to depend on Loki:
+Instead, configure Grafana to point to the remote Loki via an environment variable:
 
 ```yaml
 grafana:
-  depends_on:
-    - loki # add to existing depends_on
+  environment:
+    - LOKI_URL=${LOKI_URL:-http://10.10.20.15:3100}
 ```
 
-**Do not add Alloy or `xrd-mgmt` to `compose.yaml`.** Those belong in the VM override only.
+The `datasource.yaml` provisioning file uses `$LOKI_URL` as the Loki endpoint. In split mode the user sets `LOKI_URL=http://10.10.20.15:3100 make up`. In full-VM mode the override below sets `LOKI_URL=http://loki:3100`.
 
 #### `compose.override.vm.yaml` — New file
 
@@ -641,6 +629,17 @@ networks:
     name: segment-routing_mgmt
 
 services:
+  # Loki runs locally in full-VM mode (not in base compose — no data reaches it on a laptop)
+  loki:
+    image: grafana/loki:3.5.0
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/loki-config.yaml
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+    networks:
+      - gnp-mgmt
+
   gnmic-ingestor:
     networks:
       - gnp-mgmt
@@ -654,17 +653,21 @@ services:
       - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
     command: run /etc/alloy/config.alloy
     networks:
-      gnp-mgmt: # reaches Loki
+      gnp-mgmt: {} # reaches Loki
       xrd-mgmt: # XRd devices push syslog here
         ipv4_address: ${ALLOY_MACVLAN_IP:-10.10.20.11}
     depends_on:
       - loki
 
   grafana:
+    environment:
+      - LOKI_URL=http://loki:3100 # override: use local Loki in full-VM mode
     networks:
-      gnp-mgmt: # reaches Prometheus and Loki
+      gnp-mgmt: {} # reaches Prometheus and Loki
       xrd-mgmt: # accessible from laptop via VPN at 10.10.20.12:3000
         ipv4_address: ${GRAFANA_MACVLAN_IP:-10.10.20.12}
+    depends_on:
+      - loki
 ```
 
 ### 2.2 `loki/loki-config.yaml` — New file
@@ -745,25 +748,7 @@ loki.source.syslog "xrd_syslog" {
 
 Apply to all 8 XRd devices. Replace `<ALLOY_GATEWAY_IP>` with the bridge gateway IP found during validation (typically `192.168.60.1`).
 
-IOS-XR syslog config (add to each device's running config or startup config):
-
-```
-logging 10.10.20.11 vrf default severity warnings port 5514
-logging source-interface MgmtEth0/RP0/CPU0/0
-```
-
-Replace `10.10.20.11` with `${ALLOY_MACVLAN_IP}` if you changed the default. Apply via Ansible or manually via SSH:
-
-```bash
-ALLOY_IP=${ALLOY_MACVLAN_IP:-10.10.20.11}
-for IP in 10.10.20.10{1..8}; do
-  ssh cisco@$IP "conf t
-logging $ALLOY_IP vrf default severity warnings port 5514
-logging source-interface MgmtEth0/RP0/CPU0/0
-commit
-end"
-done
-```
+````
 
 Repeat for IPs `10.10.20.102` through `10.10.20.108`.
 
@@ -780,8 +765,7 @@ Append the Loki datasource to the existing `datasource.yaml`:
   isDefault: false
   version: 1
   editable: true
-```
-
+`
 ### 2.6 `grafana/provisioning/dashboards.yaml` — Add XRd folder
 
 Append a second provider for the XRd dashboards:
@@ -1366,3 +1350,4 @@ All paths confirmed against IOS-XR 25.3.1 via gNMIBuddy unless marked _[to valid
 - gNMIc documentation: <https://gnmic.openconfig.net>
 - Grafana Alloy syslog: <https://grafana.com/docs/alloy/latest/reference/components/loki.source.syslog/>
 - LangGraph SDK: <https://langchain-ai.github.io/langgraph/cloud/reference/sdk/python_sdk_ref/>
+````

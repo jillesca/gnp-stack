@@ -27,4 +27,5 @@
           - logging format rfc5424
           - logging {{ syslog_destination }} port {{ syslog_port }}
           - logging source-interface  MgmtEth0/RP0/CPU0/0
+          - logging monitor debugging
         backup: no
