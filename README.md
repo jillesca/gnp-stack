@@ -12,6 +12,55 @@ XRd 1-8 ──syslog──► Alloy (VM) ──► Loki
 Prometheus + Loki ──► Grafana ──► alert rules ──► webhook ──► sp_oncall (LangGraph)
 ```
 
+## Architecture
+
+### Telemetry pipeline
+
+```mermaid
+flowchart LR
+    subgraph vm["Sandbox VM — 10.10.20.15"]
+        xrd["XRd 1–8<br/>10.10.20.101–108"]
+        alloy["Alloy<br/>syslog :5514"]
+        loki["Loki<br/>:3100"]
+        xrd -->|syslog UDP| alloy --> loki
+    end
+
+    subgraph stack["Telemetry Stack"]
+        ingestor["gnmic-ingestor"]
+        nats["NATS JetStream"]
+        emitter["gnmic-emitter"]
+        prom["Prometheus<br/>:9090"]
+        graf["Grafana<br/>:3000"]
+    end
+
+    xrd -->|"gNMI :57777"| ingestor
+    ingestor --> nats --> emitter -->|remote_write| prom
+    prom -->|metrics| graf
+    loki -->|logs| graf
+```
+
+### Alert and AI response
+
+```mermaid
+flowchart LR
+    graf["Grafana<br/>:3000"]
+    am["Alertmanager<br/>:9093"]
+    wh["webhook-receiver<br/>:8080"]
+
+    subgraph ai["AI Investigation"]
+        sp["sp_oncall<br/>LangGraph"]
+        buddy["gNMIBuddy MCP"]
+    end
+
+    xrd["XRd devices<br/>10.10.20.101–108"]
+
+    graf -->|alert rules| am
+    am -->|"POST /alert"| wh
+    wh --> sp
+    sp <-->|gNMI queries| buddy
+    buddy -->|"gNMI :57777"| xrd
+```
+
 ## Topology
 
 ```text
@@ -52,6 +101,23 @@ XRd runs on a Cisco DevNet sandbox VM (`10.10.20.15`) via Docker macvlan (`segme
 | `webhook-receiver` | FastAPI receiver → sp_oncall LangGraph agent |
 | `alloy`            | Syslog ingestion (VM only) → Loki            |
 | `loki`             | Log storage (VM only)                        |
+
+## Access
+
+URLs are for split mode (running on laptop). In full-VM mode replace `localhost` with `10.10.20.12` for Grafana and `10.10.20.15` for everything else.
+
+| Container          | URL                             | Notes                                      |
+| ------------------ | ------------------------------- | ------------------------------------------ |
+| `grafana`          | <http://localhost:3000>         | Login: `admin` / `grafana`                 |
+| `prometheus`       | <http://localhost:9090>         | Query UI + Targets at `/targets`           |
+| `alertmanager`     | <http://localhost:9093>         | Active alerts and silences                 |
+| `nats`             | <http://localhost:8222>         | Server info; `/jsz` for JetStream details  |
+| `webhook-receiver` | <http://localhost:8080/docs>    | FastAPI interactive docs; `/health` status |
+| `alloy`            | <http://10.10.20.11:12345>      | Alloy debug UI (VM only)                   |
+| `nats-exporter`    | <http://localhost:7777/metrics> | Prometheus scrape endpoint (text)          |
+| `gnmic-ingestor`   | <http://localhost:9804/metrics> | gnmic metrics endpoint (text)              |
+| `gnmic-emitter`    | <http://localhost:9806/metrics> | gnmic metrics endpoint (text)              |
+| `loki`             | `http://10.10.20.15:3100/ready` | API only — query via Grafana               |
 
 ## Deployment
 
