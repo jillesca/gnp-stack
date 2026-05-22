@@ -22,8 +22,10 @@ class GrafanaAlertLabels(BaseModel):
     severity: str = ""
     event_type: str = ""
     affected_object_type: str = ""
-    # Prometheus target label (device name, e.g. "xrd-1")
+    # Prometheus target label (device name, e.g. "xrd-1") — Grafana sends "target"
     target: str = ""
+    # Alertmanager sends the device label as "source"
+    source: str = ""
     # Interface name or BGP neighbor address
     name: str = ""
     neighbor_address: str = ""
@@ -172,7 +174,7 @@ def parse_grafana_webhook(body: GrafanaWebhook) -> NetworkAlert | None:
         severity=labels.severity or "unknown",
         timestamp=timestamp,
         duration_seconds=max(duration, 0),
-        device=labels.target,
+        device=labels.target or labels.source or "unknown",
         event_type=labels.event_type,
         affected_object=affected_object,
         affected_object_type=labels.affected_object_type or None,
