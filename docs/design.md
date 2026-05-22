@@ -97,7 +97,7 @@ XRd uses Docker macvlan networking (`ens160`, subnet `10.10.20.0/24`, gateway `1
 └─────────────────────────────────────────────────────────┘
 ```
 
-> **Deployment modes**: The primary mode is **split mode** — Alloy+Loki on the VM (close to XRd, syslog reachable), everything else on the laptop. A **full-VM mode** (`make up-vm`) also exists but requires more RAM. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed setup steps.
+> **Deployment modes**: The primary mode is **split mode** — Alloy+Loki on the VM (close to XRd, syslog reachable), everything else on the laptop. A **full-VM mode** (`make up-vm`) also exists but requires more RAM. See [deployment.md](deployment.md) for detailed setup steps.
 
 ---
 
@@ -147,9 +147,8 @@ All other containers (`nats`, `prometheus`, `gnmic-emitter`) stay on `gnp-mgmt` 
 | ------------------- | ------------------------------- | --------------------------------------------------------- |
 | **Split** (primary) | `make vm-deploy` then `make up` | Alloy+Loki on VM; gnmic/NATS/Prometheus/Grafana on laptop |
 | Full-VM             | `make up-vm` (on the VM)        | Everything on the VM including Alloy+Loki                 |
-| Laptop-only         | `make up` with no VM syslog     | Full stack on laptop; Loki present but empty              |
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for step-by-step instructions for each mode.
+See [deployment.md](deployment.md) for step-by-step instructions for each mode.
 
 ### What works in each environment
 

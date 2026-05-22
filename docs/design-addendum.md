@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document is an implementation guide for AI agents. It extends [DESIGN.md](DESIGN.md) with two improvement phases decided after the initial implementation was validated end-to-end. Work on each phase independently.
+This document is an implementation guide for AI agents. It extends [design.md](design.md) with two improvement phases decided after the initial implementation was validated end-to-end. Work on each phase independently.
 
 **Constraints**:
 
