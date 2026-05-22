@@ -84,6 +84,36 @@ services:
   # Loki runs on the remote VM — see vm/compose.yaml and `make vm-deploy`
   # Grafana queries it via LOKI_URL (default: http://10.10.20.15:3100)
 
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager/alertmanager.yaml:/etc/alertmanager/alertmanager.yaml:ro
+    command: >
+      --config.file=/etc/alertmanager/alertmanager.yaml
+      --web.listen-address=:9093
+      --log.level=info
+    environment:
+      - WEBHOOK_RECEIVER_URL=${WEBHOOK_RECEIVER_URL:-http://webhook-receiver:8080/alert}
+    networks:
+      - gnp-mgmt
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9093/-/healthy",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
   webhook-receiver:
     build: ./webhook
     ports:

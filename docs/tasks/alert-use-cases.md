@@ -622,8 +622,6 @@ metric_value: <bps from $values.B>
 
 ---
 
-### SC-07: ISIS Adjacency Lost with Log Correlation (Log-Driven Alert)
-
 ### SC-07: ISIS Adjacency Lost with Log Correlation — **[ANNOTATION ONLY]**
 
 > **Not an alert rule.** Logs add _context_ (the failure reason) but the root-cause
@@ -647,8 +645,6 @@ Annotation title: `ISIS {{direction}}: {{hostname}} → {{neighbor}}`
 Annotation text: `Interface: {{interface}} | Reason: {{reason}}`
 
 ---
-
-### SC-08: BGP NOTIFICATION Received (Log-Driven Alert)
 
 ### SC-08: BGP Session Change in Logs — **[ANNOTATION ONLY]**
 
