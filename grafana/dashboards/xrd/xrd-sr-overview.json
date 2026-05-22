@@ -12,6 +12,86 @@
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
         "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "enable": true,
+        "expr": "{job=\"xrd-syslog\"} |~ `%ROUTING-ISIS-5-ADJCHANGE` | regexp `Adjacency to (?P<neighbor>\\S+) \\((?P<iface>[^)]+)\\) \\((?P<level>L[12])\\) (?P<direction>Down|Up), (?P<reason>.+)`",
+        "hide": false,
+        "iconColor": "#FF780A",
+        "name": "ISIS Adjacency Change",
+        "step": "60s",
+        "titleFormat": "ISIS {{direction}}: {{hostname}} \u2192 {{neighbor}}",
+        "textFormat": "Interface: {{iface}} | {{level}} | Reason: {{reason}}",
+        "tagKeys": "hostname",
+        "useValueForTime": false
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "enable": true,
+        "expr": "{job=\"xrd-syslog\"} |~ `%ROUTING-BGP-[35]-ADJCHANGE|%BGP-[35]-ADJCHANGE` | regexp `(?P<bgp_facility>%[A-Z_]+-BGP-[0-9]+-ADJCHANGE).*neighbor (?P<neighbor>\\S+).*(?P<direction>Up|Down)`",
+        "hide": false,
+        "iconColor": "#5794F2",
+        "name": "BGP Adjacency Change",
+        "step": "60s",
+        "titleFormat": "BGP {{direction}}: {{hostname}} \u2192 {{neighbor}}",
+        "textFormat": "{{bgp_facility}}",
+        "tagKeys": "hostname",
+        "useValueForTime": false
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "enable": true,
+        "expr": "{job=\"xrd-syslog\"} |~ `%PKT_INFRA-LINK-3-UPDOWN|%PKT_INFRA-LINEPROTO-5-UPDOWN` | regexp `Interface (?P<iface>\\S+),.*(?P<direction>changed state to [a-z]+)`",
+        "hide": false,
+        "iconColor": "#F2495C",
+        "name": "Link Up/Down",
+        "step": "60s",
+        "titleFormat": "Link {{direction}}: {{hostname}} - {{iface}}",
+        "textFormat": "{{iface}} {{direction}} on {{hostname}}",
+        "tagKeys": "hostname",
+        "useValueForTime": false
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "enable": true,
+        "expr": "{job=\"xrd-syslog\", severity=~\"[0-3]\"} |~ `%SYS-|%PLATFORM-` | regexp `%(?P<facility>[A-Z0-9_]+-[A-Z0-9_]+)-(?P<xr_sev>[0-3])-(?P<mnemonic>[A-Z0-9_]+)\\s*:\\s*(?P<body>.+)`",
+        "hide": false,
+        "iconColor": "#E02F44",
+        "name": "System/Platform Events",
+        "step": "60s",
+        "titleFormat": "{{hostname}}: %{{facility}}-{{xr_sev}}-{{mnemonic}}",
+        "textFormat": "{{body}}",
+        "tagKeys": "hostname,severity",
+        "useValueForTime": false
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "enable": true,
+        "expr": "{job=\"xrd-syslog\"} |~ `%MPLS_LSD-[0-5]-` | regexp `%MPLS_LSD-(?P<xr_sev>[0-5])-(?P<mnemonic>[A-Z0-9_]+)\\s*:\\s*(?P<body>.+)`",
+        "hide": false,
+        "iconColor": "#FADE2A",
+        "name": "MPLS Events",
+        "step": "60s",
+        "titleFormat": "MPLS {{hostname}}: {{mnemonic}}",
+        "textFormat": "{{body}}",
+        "tagKeys": "hostname",
+        "useValueForTime": false
       }
     ]
   },
@@ -3006,5 +3086,5 @@
   "timezone": "browser",
   "title": "XRd SR Topology Overview",
   "uid": "xrd-sr-overview",
-  "version": 3
+  "version": 4
 }
