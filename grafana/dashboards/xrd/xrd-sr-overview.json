@@ -2200,7 +2200,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineWidth": 0,
+            "lineWidth": 1,
             "spanNulls": false
           },
           "mappings": [
