@@ -760,175 +760,6 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Matrix view: rows=source device, columns=neighbor device (derived from ISIS system ID). Green=adjacency UP, Red=DOWN. Requires system IDs follow pattern 0100.0100.010X.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "center",
-            "cellOptions": {
-              "mode": "basic",
-              "type": "color-background"
-            },
-            "footer": {
-              "reducers": []
-            },
-            "inspect": false,
-            "minWidth": 55,
-            "width": 60,
-            "wrapText": false
-          },
-          "displayName": "${__field.name}",
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "color": "dark-red",
-                  "index": 0,
-                  "text": "DOWN"
-                },
-                "1": {
-                  "color": "dark-green",
-                  "index": 1,
-                  "text": "UP"
-                }
-              },
-              "type": "value"
-            },
-            {
-              "options": {
-                "match": "null+nan",
-                "result": {
-                  "color": "dark-gray",
-                  "index": 2,
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "noValue": "",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-gray",
-                "value": 0
-              },
-              {
-                "color": "dark-red",
-                "value": 0
-              },
-              {
-                "color": "dark-green",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "source\\\\.*"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "auto"
-                }
-              },
-              {
-                "id": "custom.width",
-                "value": 70
-              },
-              {
-                "id": "custom.align",
-                "value": "left"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 10,
-        "x": 14,
-        "y": 16
-      },
-      "id": 302,
-      "options": {
-        "cellHeight": "sm",
-        "showHeader": true
-      },
-      "pluginVersion": "12.3.5",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "max by (source, neighbor_device) (  label_replace(    Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=~\"$device\"},    \"neighbor_device\", \"xrd-$1\", \"neighbor_neighbor_system_id\", \"0100\\\\.0100\\\\.010(.)\"  ))",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "A"
-        }
-      ],
-      "title": "ISIS Neighborship Matrix",
-      "transformations": [
-        {
-          "id": "groupingToMatrix",
-          "options": {
-            "columnField": "neighbor_device",
-            "emptyValue": "null",
-            "rowField": "source",
-            "valueField": "Value"
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": false,
-                "field": "source\\neighbor_device"
-              }
-            ]
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "indexByName": {
-              "source\\neighbor_device": 0,
-              "xrd-1": 1,
-              "xrd-2": 2,
-              "xrd-3": 3,
-              "xrd-4": 4,
-              "xrd-5": 5,
-              "xrd-6": 6,
-              "xrd-7": 7,
-              "xrd-8": 8
-            },
-            "renameByName": {}
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
       "description": "UP=1, DOWN=0. Filter by device and interface using dropdowns above. Step lines make state changes immediately visible.",
       "fieldConfig": {
         "defaults": {
@@ -1098,9 +929,9 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 26
+        "w": 10,
+        "x": 14,
+        "y": 16
       },
       "id": 21,
       "options": {
@@ -1126,7 +957,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "max by (pair) (\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-1\",neighbor_neighbor_system_id=\"0100.0100.0103\"},\"pair\",\"xrd-1 ↔ xrd-3\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-3\",neighbor_neighbor_system_id=\"0100.0100.0101\"},\"pair\",\"xrd-1 ↔ xrd-3\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-1 ↔ xrd-3\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-1\",neighbor_neighbor_system_id=\"0100.0100.0105\"},\"pair\",\"xrd-1 ↔ xrd-5\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-5\",neighbor_neighbor_system_id=\"0100.0100.0101\"},\"pair\",\"xrd-1 ↔ xrd-5\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-1 ↔ xrd-5\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-2\",neighbor_neighbor_system_id=\"0100.0100.0104\"},\"pair\",\"xrd-2 ↔ xrd-4\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-4\",neighbor_neighbor_system_id=\"0100.0100.0102\"},\"pair\",\"xrd-2 ↔ xrd-4\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-2 ↔ xrd-4\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-2\",neighbor_neighbor_system_id=\"0100.0100.0106\"},\"pair\",\"xrd-2 ↔ xrd-6\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-6\",neighbor_neighbor_system_id=\"0100.0100.0102\"},\"pair\",\"xrd-2 ↔ xrd-6\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-2 ↔ xrd-6\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-3\",neighbor_neighbor_system_id=\"0100.0100.0104\"},\"pair\",\"xrd-3 ↔ xrd-4\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-4\",neighbor_neighbor_system_id=\"0100.0100.0103\"},\"pair\",\"xrd-3 ↔ xrd-4\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-3 ↔ xrd-4\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-3\",neighbor_neighbor_system_id=\"0100.0100.0105\"},\"pair\",\"xrd-3 ↔ xrd-5\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-5\",neighbor_neighbor_system_id=\"0100.0100.0103\"},\"pair\",\"xrd-3 ↔ xrd-5\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-3 ↔ xrd-5\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-3\",neighbor_neighbor_system_id=\"0100.0100.0107\"},\"pair\",\"xrd-3 ↔ xrd-7\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-7\",neighbor_neighbor_system_id=\"0100.0100.0103\"},\"pair\",\"xrd-3 ↔ xrd-7\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-3 ↔ xrd-7\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-4\",neighbor_neighbor_system_id=\"0100.0100.0106\"},\"pair\",\"xrd-4 ↔ xrd-6\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-6\",neighbor_neighbor_system_id=\"0100.0100.0104\"},\"pair\",\"xrd-4 ↔ xrd-6\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-4 ↔ xrd-6\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-4\",neighbor_neighbor_system_id=\"0100.0100.0107\"},\"pair\",\"xrd-4 ↔ xrd-7\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-7\",neighbor_neighbor_system_id=\"0100.0100.0104\"},\"pair\",\"xrd-4 ↔ xrd-7\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-4 ↔ xrd-7\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-5\",neighbor_neighbor_system_id=\"0100.0100.0106\"},\"pair\",\"xrd-5 ↔ xrd-6\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-6\",neighbor_neighbor_system_id=\"0100.0100.0105\"},\"pair\",\"xrd-5 ↔ xrd-6\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-5 ↔ xrd-6\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-5\",neighbor_neighbor_system_id=\"0100.0100.0108\"},\"pair\",\"xrd-5 ↔ xrd-8\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-8\",neighbor_neighbor_system_id=\"0100.0100.0105\"},\"pair\",\"xrd-5 ↔ xrd-8\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-5 ↔ xrd-8\",\"\",\"\") or\n  label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-6\",neighbor_neighbor_system_id=\"0100.0100.0108\"},\"pair\",\"xrd-6 ↔ xrd-8\",\"source\",\".*\") or label_replace(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-8\",neighbor_neighbor_system_id=\"0100.0100.0106\"},\"pair\",\"xrd-6 ↔ xrd-8\",\"source\",\".*\") or label_replace(vector(0),\"pair\",\"xrd-6 ↔ xrd-8\",\"\",\"\")\n)",
+          "expr": "label_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-1\",neighbor_neighbor_system_id=\"0100.0100.0103\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-3\",neighbor_neighbor_system_id=\"0100.0100.0101\"}[15s])) or vector(0)),\"pair\",\"xrd-1 ↔ xrd-3\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-1\",neighbor_neighbor_system_id=\"0100.0100.0105\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-5\",neighbor_neighbor_system_id=\"0100.0100.0101\"}[15s])) or vector(0)),\"pair\",\"xrd-1 ↔ xrd-5\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-2\",neighbor_neighbor_system_id=\"0100.0100.0104\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-4\",neighbor_neighbor_system_id=\"0100.0100.0102\"}[15s])) or vector(0)),\"pair\",\"xrd-2 ↔ xrd-4\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-2\",neighbor_neighbor_system_id=\"0100.0100.0106\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-6\",neighbor_neighbor_system_id=\"0100.0100.0102\"}[15s])) or vector(0)),\"pair\",\"xrd-2 ↔ xrd-6\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-3\",neighbor_neighbor_system_id=\"0100.0100.0104\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-4\",neighbor_neighbor_system_id=\"0100.0100.0103\"}[15s])) or vector(0)),\"pair\",\"xrd-3 ↔ xrd-4\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-3\",neighbor_neighbor_system_id=\"0100.0100.0105\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-5\",neighbor_neighbor_system_id=\"0100.0100.0103\"}[15s])) or vector(0)),\"pair\",\"xrd-3 ↔ xrd-5\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-3\",neighbor_neighbor_system_id=\"0100.0100.0107\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-7\",neighbor_neighbor_system_id=\"0100.0100.0103\"}[15s])) or vector(0)),\"pair\",\"xrd-3 ↔ xrd-7\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-4\",neighbor_neighbor_system_id=\"0100.0100.0106\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-6\",neighbor_neighbor_system_id=\"0100.0100.0104\"}[15s])) or vector(0)),\"pair\",\"xrd-4 ↔ xrd-6\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-4\",neighbor_neighbor_system_id=\"0100.0100.0107\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-7\",neighbor_neighbor_system_id=\"0100.0100.0104\"}[15s])) or vector(0)),\"pair\",\"xrd-4 ↔ xrd-7\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-5\",neighbor_neighbor_system_id=\"0100.0100.0106\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-6\",neighbor_neighbor_system_id=\"0100.0100.0105\"}[15s])) or vector(0)),\"pair\",\"xrd-5 ↔ xrd-6\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-5\",neighbor_neighbor_system_id=\"0100.0100.0108\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-8\",neighbor_neighbor_system_id=\"0100.0100.0105\"}[15s])) or vector(0)),\"pair\",\"xrd-5 ↔ xrd-8\",\"\",\"\")\nor\nlabel_replace((count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-6\",neighbor_neighbor_system_id=\"0100.0100.0108\"}[15s])) or vector(0)) * (count(last_over_time(Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=\"xrd-8\",neighbor_neighbor_system_id=\"0100.0100.0106\"}[15s])) or vector(0)),\"pair\",\"xrd-6 ↔ xrd-8\",\"\",\"\")",
           "instant": false,
           "legendFormat": "{{pair}}",
           "range": true,

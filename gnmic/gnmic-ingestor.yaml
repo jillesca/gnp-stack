@@ -125,10 +125,12 @@ subscriptions:
   # ISIS adjacency state (on_change for immediate alert triggering)
   # XR native YANG — OC adjacency sub-paths are not navigable via gNMI on XRd 25.3.1
   # neighbor-state values: isis-adj-up-state (1) / isis-adj-down-state (0)
+  # heartbeat-interval: 10s (reduced from 60s) so last_over_time[15s] in the
+  # ISIS Adjacency State panel detects absence within ~15s instead of ~70s.
   xrd-isis-adjacency:
     mode: stream
     stream-mode: on_change
-    heartbeat-interval: 60s
+    heartbeat-interval: 10s
     paths:
       - Cisco-IOS-XR-clns-isis-oper:isis/instances/instance[instance-name=*]/neighbors/neighbor
     outputs:
