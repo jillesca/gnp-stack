@@ -1,33 +1,25 @@
 {
-  "__inputs": [],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "12.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "loki",
-      "name": "Loki",
-      "version": "1.0.0"
-    }
-  ],
   "annotations": {
-    "list": []
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
   },
   "description": "Single-pane-of-glass for XRd Segment Routing topology. Covers interfaces, ISIS, BGP, MPLS SR, and syslog.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": null,
+  "id": 8,
   "links": [],
   "panels": [
     {
@@ -39,24 +31,16 @@
         "y": 0
       },
       "id": 1,
+      "panels": [],
       "title": "Network Health",
       "type": "row"
     },
     {
-      "id": 100,
-      "title": "Devices Monitored",
-      "description": "Total number of XRd devices actively reporting telemetry",
-      "type": "stat",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 4,
-        "w": 3,
-        "x": 0,
-        "y": 1
-      },
+      "description": "Total number of XRd devices actively reporting telemetry",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -69,7 +53,7 @@
             "steps": [
               {
                 "color": "#73BF69",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -77,11 +61,19 @@
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 100,
       "options": {
         "colorMode": "background",
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -89,8 +81,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -101,7 +96,9 @@
           "legendFormat": "",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "Devices Monitored",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -119,7 +116,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -142,6 +139,7 @@
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -149,10 +147,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "title": "Interfaces UP",
-      "type": "stat",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -163,7 +162,9 @@
           "legendFormat": "UP",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "Interfaces UP",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -175,12 +176,13 @@
           "color": {
             "mode": "thresholds"
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -203,6 +205,7 @@
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -210,10 +213,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "title": "Interfaces DOWN",
-      "type": "stat",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -224,7 +228,9 @@
           "legendFormat": "DOWN",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "Interfaces DOWN",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -236,12 +242,13 @@
           "color": {
             "mode": "thresholds"
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -264,6 +271,7 @@
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -271,10 +279,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "title": "ISIS Adjacencies UP",
-      "type": "stat",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -285,7 +294,9 @@
           "legendFormat": "UP",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "ISIS Adjacencies UP",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -297,12 +308,13 @@
           "color": {
             "mode": "thresholds"
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -325,6 +337,7 @@
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -332,10 +345,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "title": "ISIS Adjacencies DOWN",
-      "type": "stat",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -346,7 +360,9 @@
           "legendFormat": "DOWN",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "ISIS Adjacencies DOWN",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -358,12 +374,13 @@
           "color": {
             "mode": "thresholds"
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -386,6 +403,7 @@
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -393,10 +411,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "title": "BGP Sessions UP",
-      "type": "stat",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -407,7 +426,9 @@
           "legendFormat": "Established",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "BGP Sessions UP",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -419,12 +440,13 @@
           "color": {
             "mode": "thresholds"
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -447,6 +469,7 @@
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -454,10 +477,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "title": "BGP Sessions DOWN",
-      "type": "stat",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -468,12 +492,11 @@
           "legendFormat": "Not Established",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "BGP Sessions DOWN",
+      "type": "stat"
     },
     {
-      "id": 101,
-      "title": "Alert Scenario",
-      "type": "row",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -481,27 +504,28 @@
         "x": 0,
         "y": 5
       },
-      "panels": []
+      "id": 101,
+      "panels": [],
+      "title": "Alert Scenario",
+      "type": "row"
     },
     {
-      "id": 200,
-      "title": "Network Topology",
-      "description": "Live XRd SR topology. Node borders and link colors reflect interface oper-state (green=UP, red=DOWN).",
-      "type": "andrewbmchugh-flow-panel",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 16,
-        "w": 14,
-        "x": 0,
-        "y": 6
-      },
+      "description": "Live XRd SR topology. Node borders and link colors reflect interface oper-state (green=UP, red=DOWN).",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
       },
+      "gridPos": {
+        "h": 16,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "id": 200,
       "options": {
         "animationControlEnabled": false,
         "animationsEnabled": false,
@@ -523,6 +547,7 @@
         "timeSliderEnabled": false,
         "timeSliderMode": "local"
       },
+      "pluginVersion": "1.20.1",
       "targets": [
         {
           "datasource": {
@@ -554,216 +579,71 @@
           "legendFormat": "{{link_id}}",
           "refId": "C"
         }
-      ]
-    },
-    {
-      "id": 102,
-      "title": "Interface State",
-      "type": "timeseries",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 22
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 1.2,
-            "axisSoftMin": -0.2,
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "text": "DOWN"
-                },
-                "1": {
-                  "text": "UP"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#F2495C",
-                "value": null
-              },
-              {
-                "color": "#73BF69",
-                "value": 1
-              }
-            ]
-          },
-          "min": 0,
-          "max": 1,
-          "decimals": 0
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name=~\"$interface\", name!~\"Loopback.*|MgmtEth.*\"}",
-          "legendFormat": "{{source}} {{name}}",
-          "refId": "A"
-        }
       ],
-      "description": "UP=1, DOWN=0. Filter by device and interface using dropdowns above. Step lines make state changes immediately visible."
+      "title": "Network Topology",
+      "type": "andrewbmchugh-flow-panel"
     },
     {
-      "id": 104,
-      "title": "ISIS Adjacencies UP — per device",
-      "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 22
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 20,
-            "lineWidth": 2,
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "axisSoftMin": 0
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "count by (source) (Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=~\"$device\"} == 1)",
-          "legendFormat": "{{source}}",
-          "refId": "A"
-        }
-      ]
-    },
-    {
-      "id": 300,
-      "title": "Interface State Matrix",
       "description": "Matrix view: rows=devices, columns=GigabitEthernet interfaces. Green=UP, Red=DOWN, Gray=not present on device.",
-      "type": "table",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 10,
-        "x": 14,
-        "y": 6
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "mode": "basic",
+              "type": "color-background"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "minWidth": 40,
+            "width": 50,
+            "wrapText": false
+          },
+          "displayName": "${__field.name}",
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-gray",
+                  "index": 2,
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "dark-gray",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-red",
@@ -774,48 +654,7 @@
                 "value": 1
               }
             ]
-          },
-          "custom": {
-            "cellOptions": {
-              "type": "color-background",
-              "mode": "basic",
-              "wrapText": false
-            },
-            "align": "center",
-            "inspect": false,
-            "minWidth": 40,
-            "width": 50
-          },
-          "mappings": [
-            {
-              "type": "value",
-              "options": {
-                "0": {
-                  "text": "DOWN",
-                  "color": "dark-red",
-                  "index": 0
-                },
-                "1": {
-                  "text": "UP",
-                  "color": "dark-green",
-                  "index": 1
-                }
-              }
-            },
-            {
-              "type": "special",
-              "options": {
-                "match": "null+nan",
-                "result": {
-                  "text": "N/A",
-                  "color": "dark-gray",
-                  "index": 2
-                }
-              }
-            }
-          ],
-          "noValue": "",
-          "displayName": "${__field.name}"
+          }
         },
         "overrides": [
           {
@@ -842,41 +681,42 @@
           }
         ]
       },
-      "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "footer": {
-          "show": false,
-          "reducer": [
-            "sum"
-          ],
-          "countRows": false,
-          "fields": ""
-        }
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 6
       },
+      "id": 300,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
+          "editorMode": "code",
           "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name=~\"GigabitEthernet0/0/0/.*\"}",
-          "legendFormat": "__auto",
-          "refId": "A",
-          "instant": true,
-          "range": false,
           "format": "table",
-          "editorMode": "code"
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
         }
       ],
+      "title": "Interface State Matrix",
       "transformations": [
         {
           "id": "groupingToMatrix",
           "options": {
             "columnField": "name",
+            "emptyValue": "null",
             "rowField": "source",
-            "valueField": "Value",
-            "emptyValue": "null"
+            "valueField": "Value"
           }
         },
         {
@@ -892,40 +732,76 @@
             "fields": {},
             "sort": [
               {
-                "field": "source\\name",
-                "desc": false
+                "desc": false,
+                "field": "source\\name"
               }
             ]
           }
         }
-      ]
+      ],
+      "type": "table"
     },
     {
-      "id": 301,
-      "title": "Loopback State Matrix",
-      "description": "Matrix view: rows=devices, columns=Loopback interfaces. Green=UP, Red=DOWN.",
-      "type": "table",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 49
-      },
+      "description": "Matrix view: rows=source device, columns=neighbor device (derived from ISIS system ID). Green=adjacency UP, Red=DOWN. Requires system IDs follow pattern 0100.0100.010X.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "mode": "basic",
+              "type": "color-background"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "minWidth": 55,
+            "width": 60,
+            "wrapText": false
+          },
+          "displayName": "${__field.name}",
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-gray",
+                  "index": 2,
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "dark-gray",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-red",
@@ -936,48 +812,7 @@
                 "value": 1
               }
             ]
-          },
-          "custom": {
-            "cellOptions": {
-              "type": "color-background",
-              "mode": "basic",
-              "wrapText": false
-            },
-            "align": "center",
-            "inspect": false,
-            "minWidth": 40,
-            "width": 50
-          },
-          "mappings": [
-            {
-              "type": "value",
-              "options": {
-                "0": {
-                  "text": "DOWN",
-                  "color": "dark-red",
-                  "index": 0
-                },
-                "1": {
-                  "text": "UP",
-                  "color": "dark-green",
-                  "index": 1
-                }
-              }
-            },
-            {
-              "type": "special",
-              "options": {
-                "match": "null+nan",
-                "result": {
-                  "text": "N/A",
-                  "color": "dark-gray",
-                  "index": 2
-                }
-              }
-            }
-          ],
-          "noValue": "",
-          "displayName": "${__field.name}"
+          }
         },
         "overrides": [
           {
@@ -1003,204 +838,43 @@
             ]
           }
         ]
-      },
-      "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "footer": {
-          "show": false,
-          "reducer": [
-            "sum"
-          ],
-          "countRows": false,
-          "fields": ""
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name=~\"Loopback.*\"}",
-          "legendFormat": "__auto",
-          "refId": "A",
-          "instant": true,
-          "range": false,
-          "format": "table",
-          "editorMode": "code"
-        }
-      ],
-      "transformations": [
-        {
-          "id": "groupingToMatrix",
-          "options": {
-            "columnField": "name",
-            "rowField": "source",
-            "valueField": "Value",
-            "emptyValue": "null"
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "Loopback(.*)",
-            "renamePattern": "Lo$1"
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "field": "source\\name",
-                "desc": false
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "id": 302,
-      "title": "ISIS Neighborship Matrix",
-      "description": "Matrix view: rows=source device, columns=neighbor device (derived from ISIS system ID). Green=adjacency UP, Red=DOWN. Requires system IDs follow pattern 0100.0100.010X.",
-      "type": "table",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
       },
       "gridPos": {
         "h": 8,
-        "w": 10,
-        "x": 14,
+        "w": 12,
+        "x": 12,
         "y": 14
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-gray",
-                "value": null
-              },
-              {
-                "color": "dark-red",
-                "value": 0
-              },
-              {
-                "color": "dark-green",
-                "value": 1
-              }
-            ]
-          },
-          "custom": {
-            "cellOptions": {
-              "type": "color-background",
-              "mode": "basic",
-              "wrapText": false
-            },
-            "align": "center",
-            "inspect": false,
-            "minWidth": 55,
-            "width": 60
-          },
-          "mappings": [
-            {
-              "type": "value",
-              "options": {
-                "0": {
-                  "text": "DOWN",
-                  "color": "dark-red",
-                  "index": 0
-                },
-                "1": {
-                  "text": "UP",
-                  "color": "dark-green",
-                  "index": 1
-                }
-              }
-            },
-            {
-              "type": "special",
-              "options": {
-                "match": "null+nan",
-                "result": {
-                  "text": "N/A",
-                  "color": "dark-gray",
-                  "index": 2
-                }
-              }
-            }
-          ],
-          "noValue": "",
-          "displayName": "${__field.name}"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "source\\\\.*"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "auto"
-                }
-              },
-              {
-                "id": "custom.width",
-                "value": 70
-              },
-              {
-                "id": "custom.align",
-                "value": "left"
-              }
-            ]
-          }
-        ]
-      },
+      "id": 302,
       "options": {
-        "showHeader": true,
         "cellHeight": "sm",
-        "footer": {
-          "show": false,
-          "reducer": [
-            "sum"
-          ],
-          "countRows": false,
-          "fields": ""
-        }
+        "showHeader": true
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
+          "editorMode": "code",
           "expr": "max by (source, neighbor_device) (  label_replace(    Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=~\"$device\"},    \"neighbor_device\", \"xrd-$1\", \"neighbor_neighbor_system_id\", \"0100\\\\.0100\\\\.010(.)\"  ))",
-          "legendFormat": "__auto",
-          "refId": "A",
-          "instant": true,
-          "range": false,
           "format": "table",
-          "editorMode": "code"
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
         }
       ],
+      "title": "ISIS Neighborship Matrix",
       "transformations": [
         {
           "id": "groupingToMatrix",
           "options": {
             "columnField": "neighbor_device",
+            "emptyValue": "null",
             "rowField": "source",
-            "valueField": "Value",
-            "emptyValue": "null"
+            "valueField": "Value"
           }
         },
         {
@@ -1209,175 +883,226 @@
             "fields": {},
             "sort": [
               {
-                "field": "source\\neighbor_device",
-                "desc": false
+                "desc": false,
+                "field": "source\\neighbor_device"
               }
             ]
           }
         }
-      ]
+      ],
+      "type": "table"
     },
     {
-      "id": 303,
-      "title": "BGP Sessions (iBGP Hub-and-Spoke)",
-      "description": "Matrix view: rows=source device, columns=BGP peer IP address. Green=ESTABLISHED, Red=not established. Pattern reveals hub-and-spoke topology (most devices peer only to vRR xrd-8).",
-      "type": "table",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 81
-      },
+      "description": "UP=1, DOWN=0. Filter by device and interface using dropdowns above. Step lines make state changes immediately visible.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 1.2,
+            "axisSoftMin": -0.2,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "text": "DOWN"
+                },
+                "1": {
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-gray",
-                "value": null
-              },
-              {
-                "color": "dark-red",
+                "color": "#F2495C",
                 "value": 0
               },
               {
-                "color": "dark-green",
+                "color": "#73BF69",
                 "value": 1
               }
             ]
-          },
-          "custom": {
-            "cellOptions": {
-              "type": "color-background",
-              "mode": "basic",
-              "wrapText": false
-            },
-            "align": "center",
-            "inspect": false,
-            "minWidth": 40,
-            "width": 55
-          },
-          "mappings": [
-            {
-              "type": "value",
-              "options": {
-                "0": {
-                  "text": "NOT ESTAB",
-                  "color": "dark-red",
-                  "index": 0
-                },
-                "1": {
-                  "text": "ESTAB",
-                  "color": "dark-green",
-                  "index": 1
-                }
-              }
-            },
-            {
-              "type": "special",
-              "options": {
-                "match": "null+nan",
-                "result": {
-                  "text": "N/A",
-                  "color": "dark-gray",
-                  "index": 2
-                }
-              }
-            }
-          ],
-          "noValue": "",
-          "displayName": "${__field.name}"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "source\\\\.*"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "auto"
-                }
-              },
-              {
-                "id": "custom.width",
-                "value": 70
-              },
-              {
-                "id": "custom.align",
-                "value": "left"
-              }
-            ]
           }
-        ]
+        },
+        "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "id": 102,
       "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "footer": {
-          "show": false,
-          "reducer": [
-            "sum"
+        "legend": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "countRows": false,
-          "fields": ""
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
         }
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (source, neighbor_neighbor_address) (  Cisco_IOS_XR_ipv4_bgp_oper_bgp_instances_instance_instance_active_default_vrf_neighbors_neighbor_connection_state{source=~\"$device\"})",
-          "legendFormat": "__auto",
-          "refId": "A",
-          "instant": true,
-          "range": false,
-          "format": "table",
-          "editorMode": "code"
+          "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name=~\"$interface\", name!~\"Loopback.*|MgmtEth.*\"}",
+          "legendFormat": "{{source}} {{name}}",
+          "refId": "A"
         }
       ],
-      "transformations": [
-        {
-          "id": "groupingToMatrix",
-          "options": {
-            "columnField": "neighbor_neighbor_address",
-            "rowField": "source",
-            "valueField": "Value",
-            "emptyValue": "null"
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "100\\.100\\.100\\.(.*)",
-            "renamePattern": "$1"
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
+      "title": "Interface State",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
               {
-                "field": "source\\neighbor_neighbor_address",
-                "desc": false
+                "color": "green",
+                "value": 0
               }
             ]
-          }
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "id": 104,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
         }
-      ]
+      },
+      "pluginVersion": "12.3.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "count by (source) (Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=~\"$device\"} == 1)",
+          "legendFormat": "{{source}}",
+          "refId": "A"
+        }
+      ],
+      "title": "ISIS Adjacencies UP — per device",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -1387,7 +1112,64 @@
         "x": 0,
         "y": 30
       },
+      "id": 60,
+      "panels": [],
+      "title": "Logs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 61,
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showControls": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "pluginVersion": "12.3.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "{job=\"xrd-syslog\", hostname=~\"$device\"} |~ `%[A-Z0-9_]+-[A-Z0-9_]+-[0-5]-` !~ `MGBL-MDT-5-STREAM_AT_GATHERPOINT`",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "XRd Syslog — Notice and above (severity ≤ 5)",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
       "id": 10,
+      "panels": [],
       "title": "Interfaces",
       "type": "row"
     },
@@ -1408,6 +1190,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1416,6 +1199,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1423,6 +1207,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1432,6 +1217,20 @@
               "mode": "off"
             }
           },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
           "unit": "bps"
         },
         "overrides": []
@@ -1440,7 +1239,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 38
       },
       "id": 12,
       "options": {
@@ -1451,12 +1250,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "title": "TX Rate (bps)",
-      "type": "timeseries",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -1467,7 +1266,9 @@
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "TX Rate (bps)",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -1480,10 +1281,52 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
             "lineWidth": 1,
-            "spanNulls": false
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           },
           "unit": "bps"
         },
@@ -1493,7 +1336,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 38
       },
       "id": 13,
       "options": {
@@ -1504,12 +1347,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "title": "RX Rate (bps)",
-      "type": "timeseries",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -1520,21 +1363,14 @@
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "RX Rate (bps)",
+      "type": "timeseries"
     },
     {
-      "id": 105,
-      "title": "Interface Errors",
-      "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 0,
-        "y": 37
       },
       "fieldConfig": {
         "defaults": {
@@ -1542,10 +1378,38 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
             "lineWidth": 2,
-            "showPoints": "auto"
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -1553,7 +1417,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1561,16 +1425,27 @@
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 44
+      },
+      "id": 105,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "multi"
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
         }
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -1590,33 +1465,54 @@
           "legendFormat": "{{source}} {{interface_name}} TX errors",
           "refId": "B"
         }
-      ]
+      ],
+      "title": "Interface Errors",
+      "type": "timeseries"
     },
     {
-      "id": 106,
-      "title": "Interface State Changes (flaps)",
-      "description": "Number of up/down transitions in the selected time window. Useful for detecting unstable interfaces.",
-      "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 12,
-        "y": 37
-      },
+      "description": "Number of up/down transitions in the selected time window. Useful for detecting unstable interfaces.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
             "lineWidth": 2,
-            "showPoints": "auto"
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -1624,7 +1520,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1632,16 +1528,27 @@
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 44
+      },
+      "id": 106,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "multi"
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
         }
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -1652,31 +1559,190 @@
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "Interface State Changes (flaps)",
+      "type": "timeseries"
     },
     {
-      "id": 201,
-      "title": "Loopback State",
-      "description": "Up/down state of all Loopback interfaces. A loopback going down can cascade to ISIS, BGP, and other protocol failures.",
-      "type": "state-timeline",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 43
-      },
+      "description": "Matrix view: rows=devices, columns=Loopback interfaces. Green=UP, Red=DOWN.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
           "custom": {
+            "align": "center",
+            "cellOptions": {
+              "mode": "basic",
+              "type": "color-background"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "minWidth": 40,
+            "width": 50,
+            "wrapText": false
+          },
+          "displayName": "${__field.name}",
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-gray",
+                  "index": 2,
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-gray",
+                "value": 0
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "source\\\\.*"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 5,
+        "x": 0,
+        "y": 50
+      },
+      "id": 301,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name=~\"Loopback.*\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Loopback State Matrix",
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "name",
+            "emptyValue": "null",
+            "rowField": "source",
+            "valueField": "Value"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "Loopback(.*)",
+            "renamePattern": "Lo$1"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "source\\name"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "Up/down state of all Loopback interfaces. A loopback going down can cascade to ISIS, BGP, and other protocol failures.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "auto",
             "fillOpacity": 70,
-            "lineWidth": 1
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 1,
+            "spanNulls": false
           },
           "mappings": [
             {
@@ -1700,7 +1766,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -1711,6 +1777,13 @@
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 10,
+        "w": 19,
+        "x": 5,
+        "y": 50
+      },
+      "id": 201,
       "options": {
         "alignValue": "left",
         "legend": {
@@ -1722,10 +1795,12 @@
         "rowHeight": 0.9,
         "showValue": "auto",
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -1736,7 +1811,9 @@
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "Loopback State",
+      "type": "state-timeline"
     },
     {
       "collapsed": false,
@@ -1744,9 +1821,10 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 55
+        "y": 60
       },
       "id": 20,
+      "panels": [],
       "title": "ISIS",
       "type": "row"
     },
@@ -1755,6 +1833,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
+      "description": "UP=1, DOWN=0. Each line is a device→neighbour pair. Filter by device to focus on specific adjacencies.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1769,6 +1848,7 @@
             "axisSoftMax": 1.2,
             "axisSoftMin": -0.2,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1777,6 +1857,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "stepAfter",
             "lineWidth": 2,
             "pointSize": 5,
@@ -1784,6 +1865,7 @@
               "type": "linear"
             },
             "showPoints": "never",
+            "showValues": false,
             "spanNulls": true,
             "stacking": {
               "group": "A",
@@ -1793,6 +1875,7 @@
               "mode": "off"
             }
           },
+          "decimals": 0,
           "mappings": [
             {
               "options": {
@@ -1806,22 +1889,21 @@
               "type": "value"
             }
           ],
+          "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "#F2495C",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#73BF69",
                 "value": 1
               }
             ]
-          },
-          "min": 0,
-          "max": 1,
-          "decimals": 0
+          }
         },
         "overrides": []
       },
@@ -1829,7 +1911,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 56
+        "y": 61
       },
       "id": 21,
       "options": {
@@ -1842,27 +1924,28 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "title": "ISIS Adjacency State",
-      "type": "timeseries",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
+          "editorMode": "code",
           "expr": "max by (source, neighbor_neighbor_system_id) (Cisco_IOS_XR_clns_isis_oper_isis_instances_instance_neighbors_neighbor_neighbor_state{source=~\"$device\"})",
-          "legendFormat": "{{source}} >> {{neighbor_neighbor_system_id}}",
-          "refId": "A",
-          "range": true,
           "instant": false,
-          "editorMode": "code"
+          "legendFormat": "{{source}} >> {{neighbor_neighbor_system_id}}",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "description": "UP=1, DOWN=0. Each line is a device→neighbour pair. Filter by device to focus on specific adjacencies."
+      "title": "ISIS Adjacency State",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -1870,11 +1953,170 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 64
+        "y": 69
       },
       "id": 30,
+      "panels": [],
       "title": "BGP",
       "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "Matrix view: rows=source device, columns=BGP peer IP address. Green=ESTABLISHED, Red=not established. Pattern reveals hub-and-spoke topology (most devices peer only to vRR xrd-8).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "mode": "basic",
+              "type": "color-background"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "minWidth": 40,
+            "width": 55,
+            "wrapText": false
+          },
+          "displayName": "${__field.name}",
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "NOT ESTAB"
+                },
+                "1": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "ESTAB"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-gray",
+                  "index": 2,
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-gray",
+                "value": 0
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "source\\\\.*"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 70
+      },
+      "id": 303,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "max by (source, neighbor_neighbor_address) (  Cisco_IOS_XR_ipv4_bgp_oper_bgp_instances_instance_instance_active_default_vrf_neighbors_neighbor_connection_state{source=~\"$device\"})",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "BGP Sessions (iBGP Hub-and-Spoke)",
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "neighbor_neighbor_address",
+            "emptyValue": "null",
+            "rowField": "source",
+            "valueField": "Value"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "100\\.100\\.100\\.(.*)",
+            "renamePattern": "$1"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "source\\neighbor_neighbor_address"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
@@ -1887,8 +2129,16 @@
             "mode": "thresholds"
           },
           "custom": {
+            "axisPlacement": "auto",
             "fillOpacity": 70,
-            "lineWidth": 0
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
           },
           "mappings": [
             {
@@ -1912,7 +2162,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1921,28 +2171,28 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 65
+        "w": 17,
+        "x": 7,
+        "y": 70
       },
       "id": 31,
       "options": {
-        "mergeValues": false,
-        "rowHeight": 0.9,
-        "showValue": "auto",
         "alignValue": "left",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
         "legend": {
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
+        },
+        "mergeValues": false,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
         }
       },
-      "title": "BGP Session State",
-      "type": "state-timeline",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -1953,7 +2203,9 @@
           "legendFormat": "{{source}} → {{neighbor_neighbor_address}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "BGP Session State",
+      "type": "state-timeline"
     },
     {
       "datasource": {
@@ -1966,9 +2218,52 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "lineWidth": 1
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           },
           "unit": "short"
         },
@@ -1976,9 +2271,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 65
+        "w": 12,
+        "x": 0,
+        "y": 78
       },
       "id": 32,
       "options": {
@@ -1989,12 +2284,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "title": "BGP Connection Down Count",
-      "type": "timeseries",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2005,21 +2300,14 @@
           "legendFormat": "{{source}} → {{neighbor_neighbor_address}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "BGP Connection Down Count",
+      "type": "timeseries"
     },
     {
-      "id": 107,
-      "title": "BGP Update Messages Received",
-      "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 65
       },
       "fieldConfig": {
         "defaults": {
@@ -2027,10 +2315,38 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
             "lineWidth": 2,
-            "showPoints": "auto"
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -2038,7 +2354,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2046,16 +2362,27 @@
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 78
+      },
+      "id": 107,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "multi"
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
         }
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2066,21 +2393,14 @@
           "legendFormat": "{{source}} → {{neighbor_neighbor_address}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "BGP Update Messages Received",
+      "type": "timeseries"
     },
     {
-      "id": 108,
-      "title": "BGP Prefixes Received per Neighbour",
-      "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 73
       },
       "fieldConfig": {
         "defaults": {
@@ -2088,10 +2408,38 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
             "lineWidth": 2,
-            "showPoints": "auto"
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -2099,7 +2447,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2107,16 +2455,27 @@
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 86
+      },
+      "id": 108,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "multi"
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
         }
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2127,7 +2486,9 @@
           "legendFormat": "{{source}} → {{neighbor_neighbor_address}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "BGP Prefixes Received per Neighbour",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -2135,9 +2496,10 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 87
+        "y": 94
       },
       "id": 40,
+      "panels": [],
       "title": "Segment Routing",
       "type": "row"
     },
@@ -2152,9 +2514,52 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "lineWidth": 1
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           },
           "unit": "short"
         },
@@ -2164,7 +2569,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 88
+        "y": 95
       },
       "id": 41,
       "options": {
@@ -2175,12 +2580,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "title": "MPLS Labels Allocated",
-      "type": "timeseries",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2191,7 +2596,9 @@
           "legendFormat": "{{source}} total",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "MPLS Labels Allocated",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -2204,9 +2611,52 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "lineWidth": 1
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           },
           "unit": "short"
         },
@@ -2216,7 +2666,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 88
+        "y": 95
       },
       "id": 42,
       "options": {
@@ -2227,12 +2677,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "title": "PCE Topology Links (xrd-7)",
-      "type": "timeseries",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2243,38 +2693,80 @@
           "legendFormat": "{{source}} topology nodes",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "PCE Topology Links (xrd-7)",
+      "type": "timeseries"
     },
     {
-      "id": 202,
-      "title": "SR-TE Tunnel TX Rate (bps)",
-      "description": "Transmit throughput per SR-TE tunnel. A flat line at 0 means the tunnel is dark (no traffic forwarded).",
-      "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 96
-      },
+      "description": "Transmit throughput per SR-TE tunnel. A flat line at 0 means the tunnel is dark (no traffic forwarded).",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
             "lineWidth": 1,
-            "spanNulls": false
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           },
           "unit": "bps"
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 103
+      },
+      "id": 202,
       "options": {
         "legend": {
           "calcs": [],
@@ -2283,10 +2775,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2297,38 +2791,80 @@
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "SR-TE Tunnel TX Rate (bps)",
+      "type": "timeseries"
     },
     {
-      "id": 203,
-      "title": "SR-TE Tunnel RX Rate (bps)",
-      "description": "Receive throughput per SR-TE tunnel.",
-      "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 96
-      },
+      "description": "Receive throughput per SR-TE tunnel.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
             "lineWidth": 1,
-            "spanNulls": false
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           },
           "unit": "bps"
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 103
+      },
+      "id": 203,
       "options": {
         "legend": {
           "calcs": [],
@@ -2337,10 +2873,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2351,7 +2889,9 @@
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "SR-TE Tunnel RX Rate (bps)",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -2359,9 +2899,10 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 104
+        "y": 111
       },
       "id": 50,
+      "panels": [],
       "title": "System Health",
       "type": "row"
     },
@@ -2376,13 +2917,56 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "lineWidth": 1
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
-          "unit": "percentunit",
+          "mappings": [],
+          "max": 1,
           "min": 0,
-          "max": 1
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -2390,7 +2974,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 105
+        "y": 112
       },
       "id": 51,
       "options": {
@@ -2403,12 +2987,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "title": "Memory Usage %",
-      "type": "timeseries",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2419,7 +3003,9 @@
           "legendFormat": "{{source}}",
           "refId": "A"
         }
-      ]
+      ],
+      "title": "Memory Usage %",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -2432,9 +3018,52 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "lineWidth": 1
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           },
           "unit": "bytes"
         },
@@ -2444,7 +3073,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 105
+        "y": 112
       },
       "id": 52,
       "options": {
@@ -2457,12 +3086,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "title": "Free Physical Memory",
-      "type": "timeseries",
+      "pluginVersion": "12.3.5",
       "targets": [
         {
           "datasource": {
@@ -2473,63 +3102,14 @@
           "legendFormat": "{{source}}",
           "refId": "A"
         }
-      ]
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 113
-      },
-      "id": 60,
-      "title": "Logs",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 24,
-        "x": 0,
-        "y": 114
-      },
-      "id": 61,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "title": "XRd Syslog — Notice and above (severity ≤ 5)",
-      "type": "logs",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "{job=\"xrd-syslog\", hostname=~\"$device\"} |~ `%[A-Z0-9_]+-[A-Z0-9_]+-[0-5]-` !~ `MGBL-MDT-5-STREAM_AT_GATHERPOINT`",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ]
+      ],
+      "title": "Free Physical Memory",
+      "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "10s",
-  "schemaVersion": 39,
+  "schemaVersion": 42,
   "tags": [
     "xrd",
     "segment-routing",
@@ -2539,8 +3119,8 @@
   "templating": {
     "list": [
       {
+        "allValue": ".*",
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -2549,9 +3129,8 @@
           "uid": "prometheus"
         },
         "definition": "label_values(openconfig_interfaces_interface_state_oper_status, source)",
-        "hide": 0,
         "includeAll": true,
-        "multi": false,
+        "label": "Device",
         "name": "device",
         "options": [],
         "query": {
@@ -2561,14 +3140,11 @@
         "refresh": 2,
         "regex": "",
         "sort": 1,
-        "type": "query",
-        "label": "Device",
-        "allValue": ".*"
+        "type": "query"
       },
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -2577,7 +3153,6 @@
           "uid": "prometheus"
         },
         "definition": "label_values(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}, interface_name)",
-        "hide": 0,
         "includeAll": true,
         "label": "Interface",
         "multi": true,
@@ -2603,6 +3178,5 @@
   "timezone": "browser",
   "title": "XRd SR Topology Overview",
   "uid": "xrd-sr-overview",
-  "version": 2,
-  "weekStart": ""
+  "version": 2
 }
