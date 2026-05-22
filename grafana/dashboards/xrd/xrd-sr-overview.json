@@ -813,7 +813,7 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 12,
+        "w": 24,
         "x": 0,
         "y": 26
       },
@@ -841,7 +841,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "min by (link) (\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-1\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-1:Gi0 \u2014 xrd-3:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-1:Gi0 \u2014 xrd-3:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-1\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-1:Gi1 \u2014 xrd-5:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-1:Gi1 \u2014 xrd-5:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-2\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-2:Gi0 \u2014 xrd-4:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-2:Gi0 \u2014 xrd-4:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-2\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-2:Gi1 \u2014 xrd-6:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-2:Gi1 \u2014 xrd-6:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi0 \u2014 xrd-4:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi0 \u2014 xrd-4:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-3:Gi1 \u2014 xrd-5:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-3:Gi1 \u2014 xrd-5:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-3:Gi3 \u2014 xrd-7:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-7\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi3 \u2014 xrd-7:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi1 \u2014 xrd-6:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi1 \u2014 xrd-6:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-4:Gi3 \u2014 xrd-7:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-7\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi3 \u2014 xrd-7:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi0 \u2014 xrd-6:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi0 \u2014 xrd-6:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-5:Gi3 \u2014 xrd-8:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-8\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi3 \u2014 xrd-8:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-6:Gi3 \u2014 xrd-8:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-8\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-6:Gi3 \u2014 xrd-8:Gi1\",\"\",\"\")\n)",
+          "expr": "min by (link) (\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-1\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-1:Gi0 — xrd-3:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-1:Gi0 — xrd-3:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-1\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-1:Gi1 — xrd-5:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-1:Gi1 — xrd-5:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-2\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-2:Gi0 — xrd-4:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-2:Gi0 — xrd-4:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-2\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-2:Gi1 — xrd-6:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-2:Gi1 — xrd-6:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi0 — xrd-4:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi0 — xrd-4:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-3:Gi1 — xrd-5:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-3:Gi1 — xrd-5:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-3:Gi3 — xrd-7:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-7\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi3 — xrd-7:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi1 — xrd-6:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi1 — xrd-6:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-4:Gi3 — xrd-7:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-7\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi3 — xrd-7:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi0 — xrd-6:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi0 — xrd-6:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-5:Gi3 — xrd-8:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-8\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi3 — xrd-8:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-6:Gi3 — xrd-8:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-8\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-6:Gi3 — xrd-8:Gi1\",\"\",\"\")\n)",
           "instant": false,
           "legendFormat": "{{link}}",
           "range": true,
@@ -1105,7 +1105,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(openconfig_interfaces_interface_state_counters_out_octets{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[1m]) * 8",
+          "expr": "rate(openconfig_interfaces_interface_state_counters_out_octets{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[1m]) * 8",
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
@@ -1202,7 +1202,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(openconfig_interfaces_interface_state_counters_in_octets{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[1m]) * 8",
+          "expr": "rate(openconfig_interfaces_interface_state_counters_in_octets{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[1m]) * 8",
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
@@ -1295,7 +1295,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(openconfig_interfaces_interface_state_counters_in_errors{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[5m])",
+          "expr": "rate(openconfig_interfaces_interface_state_counters_in_errors{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[5m])",
           "legendFormat": "{{source}} {{interface_name}} RX errors",
           "refId": "A"
         },
@@ -1304,7 +1304,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(openconfig_interfaces_interface_state_counters_out_errors{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[5m])",
+          "expr": "rate(openconfig_interfaces_interface_state_counters_out_errors{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[5m])",
           "legendFormat": "{{source}} {{interface_name}} TX errors",
           "refId": "B"
         }
@@ -1398,7 +1398,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "changes(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name=~\"$interface\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[$__range])",
+          "expr": "changes(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}[$__range])",
           "legendFormat": "{{source}} {{interface_name}}",
           "refId": "A"
         }
