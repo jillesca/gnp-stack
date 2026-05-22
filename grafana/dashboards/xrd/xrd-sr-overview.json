@@ -1854,15 +1854,14 @@
       },
       "id": 201,
       "options": {
-        "alignValue": "left",
+        "colWidth": 0.9,
         "legend": {
-          "displayMode": "list",
+          "displayMode": "hidden",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
-        "mergeValues": true,
         "rowHeight": 0.9,
-        "showValue": "auto",
+        "showValue": "never",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
@@ -1882,7 +1881,7 @@
         }
       ],
       "title": "Loopback State",
-      "type": "state-timeline"
+      "type": "status-history"
     },
     {
       "collapsed": false,
@@ -2225,8 +2224,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
               }
             ]
           }
@@ -2241,15 +2244,14 @@
       },
       "id": 31,
       "options": {
-        "alignValue": "left",
+        "colWidth": 0.9,
         "legend": {
-          "displayMode": "list",
+          "displayMode": "hidden",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
-        "mergeValues": false,
         "rowHeight": 0.9,
-        "showValue": "auto",
+        "showValue": "never",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
@@ -2269,7 +2271,7 @@
         }
       ],
       "title": "BGP Session State",
-      "type": "state-timeline"
+      "type": "status-history"
     },
     {
       "datasource": {
