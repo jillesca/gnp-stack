@@ -737,6 +737,20 @@
               }
             ]
           }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "source\\name": 0,
+              "G0": 1,
+              "G1": 2,
+              "G2": 3,
+              "G3": 4
+            },
+            "renameByName": {}
+          }
         }
       ],
       "type": "table"
@@ -887,6 +901,24 @@
                 "field": "source\\neighbor_device"
               }
             ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "source\\neighbor_device": 0,
+              "xrd-1": 1,
+              "xrd-2": 2,
+              "xrd-3": 3,
+              "xrd-4": 4,
+              "xrd-5": 5,
+              "xrd-6": 6,
+              "xrd-7": 7,
+              "xrd-8": 8
+            },
+            "renameByName": {}
           }
         }
       ],
@@ -1741,6 +1773,19 @@
               }
             ]
           }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "source\\name": 0,
+              "Lo0": 1,
+              "Lo100": 2,
+              "Lo900": 3
+            },
+            "renameByName": {}
+          }
         }
       ],
       "type": "table"
@@ -2114,6 +2159,24 @@
                 "field": "source\\neighbor_neighbor_address"
               }
             ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "source\\neighbor_neighbor_address": 0,
+              "1": 1,
+              "2": 2,
+              "3": 3,
+              "4": 4,
+              "5": 5,
+              "6": 6,
+              "7": 7,
+              "8": 8
+            },
+            "renameByName": {}
           }
         }
       ],
@@ -3179,5 +3242,5 @@
   "timezone": "browser",
   "title": "XRd SR Topology Overview",
   "uid": "xrd-sr-overview",
-  "version": 2
+  "version": 3
 }
