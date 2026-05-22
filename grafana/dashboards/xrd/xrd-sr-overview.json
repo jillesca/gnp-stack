@@ -760,7 +760,7 @@
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
         "x": 0,
         "y": 23
@@ -774,11 +774,15 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "dark-gray",
                 "value": null
               },
               {
-                "color": "green",
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
                 "value": 1
               }
             ]
@@ -786,35 +790,49 @@
           "custom": {
             "cellOptions": {
               "type": "color-background",
-              "mode": "basic"
+              "mode": "basic",
+              "wrapText": false
             },
             "align": "center",
-            "inspect": false
+            "inspect": false,
+            "minWidth": 40,
+            "width": 50
           },
           "mappings": [
             {
               "type": "value",
               "options": {
                 "0": {
-                  "text": "DOWN",
-                  "color": "red",
+                  "text": "",
+                  "color": "dark-red",
                   "index": 0
                 },
                 "1": {
-                  "text": "UP",
-                  "color": "green",
+                  "text": "",
+                  "color": "dark-green",
                   "index": 1
+                }
+              }
+            },
+            {
+              "type": "special",
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "text": "",
+                  "color": "dark-gray",
+                  "index": 2
                 }
               }
             }
           ],
-          "noValue": "-"
+          "noValue": ""
         },
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "source\\device"
+              "id": "byRegexp",
+              "options": "source\\\\.*"
             },
             "properties": [
               {
@@ -825,7 +843,11 @@
               },
               {
                 "id": "custom.width",
-                "value": 100
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
               }
             ]
           }
@@ -841,13 +863,7 @@
           ],
           "countRows": false,
           "fields": ""
-        },
-        "sortBy": [
-          {
-            "displayName": "source\\device",
-            "desc": false
-          }
-        ]
+        }
       },
       "targets": [
         {
@@ -875,12 +891,19 @@
           }
         },
         {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "GigabitEthernet(.*)",
+            "renamePattern": "G$1"
+          }
+        },
+        {
           "id": "sortBy",
           "options": {
             "fields": {},
             "sort": [
               {
-                "field": "source\\device",
+                "field": "source\\name",
                 "desc": false
               }
             ]
@@ -898,7 +921,7 @@
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
         "x": 12,
         "y": 23
@@ -912,11 +935,15 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "dark-gray",
                 "value": null
               },
               {
-                "color": "green",
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
                 "value": 1
               }
             ]
@@ -924,35 +951,49 @@
           "custom": {
             "cellOptions": {
               "type": "color-background",
-              "mode": "basic"
+              "mode": "basic",
+              "wrapText": false
             },
             "align": "center",
-            "inspect": false
+            "inspect": false,
+            "minWidth": 40,
+            "width": 50
           },
           "mappings": [
             {
               "type": "value",
               "options": {
                 "0": {
-                  "text": "DOWN",
-                  "color": "red",
+                  "text": "",
+                  "color": "dark-red",
                   "index": 0
                 },
                 "1": {
-                  "text": "UP",
-                  "color": "green",
+                  "text": "",
+                  "color": "dark-green",
                   "index": 1
+                }
+              }
+            },
+            {
+              "type": "special",
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "text": "",
+                  "color": "dark-gray",
+                  "index": 2
                 }
               }
             }
           ],
-          "noValue": "-"
+          "noValue": ""
         },
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "source\\device"
+              "id": "byRegexp",
+              "options": "source\\\\.*"
             },
             "properties": [
               {
@@ -963,7 +1004,11 @@
               },
               {
                 "id": "custom.width",
-                "value": 100
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
               }
             ]
           }
@@ -979,13 +1024,7 @@
           ],
           "countRows": false,
           "fields": ""
-        },
-        "sortBy": [
-          {
-            "displayName": "source\\device",
-            "desc": false
-          }
-        ]
+        }
       },
       "targets": [
         {
@@ -1013,12 +1052,19 @@
           }
         },
         {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "Loopback(.*)",
+            "renamePattern": "Lo$1"
+          }
+        },
+        {
           "id": "sortBy",
           "options": {
             "fields": {},
             "sort": [
               {
-                "field": "source\\device",
+                "field": "source\\name",
                 "desc": false
               }
             ]
@@ -1036,10 +1082,10 @@
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 29
       },
       "fieldConfig": {
         "defaults": {
@@ -1050,11 +1096,15 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "dark-gray",
                 "value": null
               },
               {
-                "color": "green",
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
                 "value": 1
               }
             ]
@@ -1062,35 +1112,49 @@
           "custom": {
             "cellOptions": {
               "type": "color-background",
-              "mode": "basic"
+              "mode": "basic",
+              "wrapText": false
             },
             "align": "center",
-            "inspect": false
+            "inspect": false,
+            "minWidth": 40,
+            "width": 50
           },
           "mappings": [
             {
               "type": "value",
               "options": {
                 "0": {
-                  "text": "DOWN",
-                  "color": "red",
+                  "text": "",
+                  "color": "dark-red",
                   "index": 0
                 },
                 "1": {
-                  "text": "UP",
-                  "color": "green",
+                  "text": "",
+                  "color": "dark-green",
                   "index": 1
+                }
+              }
+            },
+            {
+              "type": "special",
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "text": "",
+                  "color": "dark-gray",
+                  "index": 2
                 }
               }
             }
           ],
-          "noValue": "-"
+          "noValue": ""
         },
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "source\\device"
+              "id": "byRegexp",
+              "options": "source\\\\.*"
             },
             "properties": [
               {
@@ -1101,7 +1165,11 @@
               },
               {
                 "id": "custom.width",
-                "value": 100
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
               }
             ]
           }
@@ -1117,13 +1185,7 @@
           ],
           "countRows": false,
           "fields": ""
-        },
-        "sortBy": [
-          {
-            "displayName": "source\\device",
-            "desc": false
-          }
-        ]
+        }
       },
       "targets": [
         {
@@ -1174,10 +1236,10 @@
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 29
       },
       "fieldConfig": {
         "defaults": {
@@ -1188,11 +1250,15 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "dark-gray",
                 "value": null
               },
               {
-                "color": "green",
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
                 "value": 1
               }
             ]
@@ -1200,35 +1266,49 @@
           "custom": {
             "cellOptions": {
               "type": "color-background",
-              "mode": "basic"
+              "mode": "basic",
+              "wrapText": false
             },
             "align": "center",
-            "inspect": false
+            "inspect": false,
+            "minWidth": 40,
+            "width": 55
           },
           "mappings": [
             {
               "type": "value",
               "options": {
                 "0": {
-                  "text": "NOT ESTAB",
-                  "color": "red",
+                  "text": "",
+                  "color": "dark-red",
                   "index": 0
                 },
                 "1": {
-                  "text": "ESTAB",
-                  "color": "green",
+                  "text": "",
+                  "color": "dark-green",
                   "index": 1
+                }
+              }
+            },
+            {
+              "type": "special",
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "text": "",
+                  "color": "dark-gray",
+                  "index": 2
                 }
               }
             }
           ],
-          "noValue": "-"
+          "noValue": ""
         },
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "source\\device"
+              "id": "byRegexp",
+              "options": "source\\\\.*"
             },
             "properties": [
               {
@@ -1239,7 +1319,11 @@
               },
               {
                 "id": "custom.width",
-                "value": 100
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
               }
             ]
           }
@@ -1255,13 +1339,7 @@
           ],
           "countRows": false,
           "fields": ""
-        },
-        "sortBy": [
-          {
-            "displayName": "source\\device",
-            "desc": false
-          }
-        ]
+        }
       },
       "targets": [
         {
@@ -1289,6 +1367,13 @@
           }
         },
         {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "100\\.100\\.100\\.(.*)",
+            "renamePattern": ".100.$1"
+          }
+        },
+        {
           "id": "sortBy",
           "options": {
             "fields": {},
@@ -1308,7 +1393,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 39
+        "y": 35
       },
       "id": 10,
       "title": "Interfaces",
@@ -1363,7 +1448,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 36
       },
       "id": 12,
       "options": {
@@ -1416,7 +1501,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 40
+        "y": 36
       },
       "id": 13,
       "options": {
@@ -1457,7 +1542,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 46
+        "y": 42
       },
       "fieldConfig": {
         "defaults": {
@@ -1528,7 +1613,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 46
+        "y": 42
       },
       "fieldConfig": {
         "defaults": {
@@ -1590,7 +1675,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 52
+        "y": 48
       },
       "fieldConfig": {
         "defaults": {
@@ -1667,7 +1752,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 58
+        "y": 54
       },
       "id": 20,
       "title": "ISIS",
@@ -1752,7 +1837,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 55
       },
       "id": 21,
       "options": {
@@ -1793,7 +1878,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 67
+        "y": 63
       },
       "id": 30,
       "title": "BGP",
@@ -1846,7 +1931,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 68
+        "y": 64
       },
       "id": 31,
       "options": {
@@ -1901,7 +1986,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 68
+        "y": 64
       },
       "id": 32,
       "options": {
@@ -1942,7 +2027,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 68
+        "y": 64
       },
       "fieldConfig": {
         "defaults": {
@@ -2003,7 +2088,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 76
+        "y": 72
       },
       "fieldConfig": {
         "defaults": {
@@ -2058,7 +2143,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 84
+        "y": 80
       },
       "id": 40,
       "title": "Segment Routing",
@@ -2087,7 +2172,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 85
+        "y": 81
       },
       "id": 41,
       "options": {
@@ -2139,7 +2224,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 85
+        "y": 81
       },
       "id": 42,
       "options": {
@@ -2181,7 +2266,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 93
+        "y": 89
       },
       "fieldConfig": {
         "defaults": {
@@ -2235,7 +2320,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 93
+        "y": 89
       },
       "fieldConfig": {
         "defaults": {
@@ -2282,7 +2367,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 101
+        "y": 97
       },
       "id": 50,
       "title": "System Health",
@@ -2313,7 +2398,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 102
+        "y": 98
       },
       "id": 51,
       "options": {
@@ -2367,7 +2452,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 102
+        "y": 98
       },
       "id": 52,
       "options": {
@@ -2404,7 +2489,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 110
+        "y": 106
       },
       "id": 60,
       "title": "Logs",
@@ -2423,7 +2508,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 111
+        "y": 107
       },
       "id": 61,
       "options": {
