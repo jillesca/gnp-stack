@@ -760,73 +760,50 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "UP=1, DOWN=0. Filter by device and interface using dropdowns above. Step lines make state changes immediately visible.",
+      "description": "State of all 12 physical links over time. Green=UP, Red=DOWN. Uses min() of both endpoints — a link shows DOWN if either interface reports 0. Port-qualified labels identify the exact interface pair per link. Topology changes require updating the pairs in this query.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMax": 1.2,
-            "axisSoftMin": -0.2,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
+            "fillOpacity": 70,
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "showValues": false,
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "lineWidth": 1,
+            "spanNulls": false
           },
-          "decimals": 0,
           "mappings": [
             {
               "options": {
                 "0": {
+                  "color": "red",
+                  "index": 0,
                   "text": "DOWN"
                 },
                 "1": {
+                  "color": "green",
+                  "index": 1,
                   "text": "UP"
                 }
               },
               "type": "value"
             }
           ],
-          "max": 1,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "#F2495C",
+                "color": "red",
                 "value": 0
               },
               {
-                "color": "#73BF69",
+                "color": "green",
                 "value": 1
               }
             ]
@@ -842,18 +819,18 @@
       },
       "id": 102,
       "options": {
+        "colWidth": 0.9,
         "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
+          "displayMode": "hidden",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
+        "rowHeight": 0.85,
+        "showValue": "never",
         "tooltip": {
           "hideZeros": false,
-          "mode": "multi",
-          "sort": "desc"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "12.3.5",
@@ -863,13 +840,16 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "openconfig_interfaces_interface_state_oper_status{source=~\"$device\", name=~\"$interface\", name!~\"Loopback.*|MgmtEth.*\"}",
-          "legendFormat": "{{source}} {{name}}",
+          "editorMode": "code",
+          "expr": "min by (link) (\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-1\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-1:Gi0 \u2014 xrd-3:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-1:Gi0 \u2014 xrd-3:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-1\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-1:Gi1 \u2014 xrd-5:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-1:Gi1 \u2014 xrd-5:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-2\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-2:Gi0 \u2014 xrd-4:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-2:Gi0 \u2014 xrd-4:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-2\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-2:Gi1 \u2014 xrd-6:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/2\"},\"link\",\"xrd-2:Gi1 \u2014 xrd-6:Gi2\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi0 \u2014 xrd-4:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi0 \u2014 xrd-4:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-3:Gi1 \u2014 xrd-5:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-3:Gi1 \u2014 xrd-5:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-3\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-3:Gi3 \u2014 xrd-7:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-7\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-3:Gi3 \u2014 xrd-7:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi1 \u2014 xrd-6:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi1 \u2014 xrd-6:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-4\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-4:Gi3 \u2014 xrd-7:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-7\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-4:Gi3 \u2014 xrd-7:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi0 \u2014 xrd-6:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi0 \u2014 xrd-6:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-5\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-5:Gi3 \u2014 xrd-8:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-8\",name=\"GigabitEthernet0/0/0/0\"},\"link\",\"xrd-5:Gi3 \u2014 xrd-8:Gi0\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-6\",name=\"GigabitEthernet0/0/0/3\"},\"link\",\"xrd-6:Gi3 \u2014 xrd-8:Gi1\",\"\",\"\") or\n  label_replace(openconfig_interfaces_interface_state_oper_status{source=\"xrd-8\",name=\"GigabitEthernet0/0/0/1\"},\"link\",\"xrd-6:Gi3 \u2014 xrd-8:Gi1\",\"\",\"\")\n)",
+          "instant": false,
+          "legendFormat": "{{link}}",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Interface State",
-      "type": "timeseries"
+      "title": "Physical Link State",
+      "type": "status-history"
     },
     {
       "datasource": {
@@ -3010,32 +2990,6 @@
         "query": {
           "query": "label_values(openconfig_interfaces_interface_state_oper_status, source)",
           "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "allValue": ".*",
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "definition": "label_values(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}, interface_name)",
-        "includeAll": true,
-        "label": "Interface",
-        "multi": true,
-        "name": "interface",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(openconfig_interfaces_interface_state_oper_status{source=~\"$device\", interface_name!~\"Loopback.*|MgmtEth.*|Null.*|srte_.*\"}, interface_name)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
         "regex": "",
