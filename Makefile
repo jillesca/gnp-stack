@@ -11,7 +11,7 @@ VM_SSH   := ssh $(VM_USER)@$(VM_HOST)
 VM_COMPOSE := docker compose -f $(VM_PATH)/vm/compose.yaml
 
 .PHONY: help up up-vm up-laptop down down-vm down-laptop restart restart-vm restart-laptop \
-        logs ps validate \
+        restart-grafana logs ps validate \
         vm-sync vm-start vm-stop vm-deploy vm-logs vm-status
 
 help:
@@ -23,6 +23,7 @@ help:
 	@echo "  make down-laptop     Stop laptop+Alloy stack"
 	@echo "  make down-vm         Stop VM-mode stack (required if started with make up-vm)"
 	@echo "  make restart         Restart laptop-mode stack"
+	@echo "  make restart-grafana Restart only the Grafana container (picks up dashboard changes)"
 	@echo "  make restart-laptop  Restart laptop+Alloy stack"
 	@echo "  make restart-vm      Restart VM-mode stack"
 	@echo "  make logs            Follow logs"
@@ -65,6 +66,9 @@ down-laptop:
 	$(COMPOSE_LAPTOP) down
 
 restart: down up
+
+restart-grafana:
+	$(COMPOSE) restart grafana
 
 restart-vm: down-vm up-vm
 
