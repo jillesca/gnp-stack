@@ -33,8 +33,9 @@ This relies on the convention that ISIS system IDs follow the pattern `0100.0100
 If the lab topology changes (devices added/removed, system IDs renumbered), the following must be updated:
 
 1. **ISIS Matrix panel** (id:302) — the `label_replace` regex pattern
-2. **Network Topology flow panel** (id:200) — the SVG topology diagram and panelConfig metric mappings
-3. **Link status queries** in the flow panel — static `label_replace` per-link expressions
+2. **ISIS Adjacency State panel** (id:21) — the hardcoded 12-pair `or vector(0)` query. Each pair is encoded as two metric selectors (one per side) plus a `label_replace(vector(0), ...)` fallback that keeps the row visible as DOWN when XR removes the neighbor from its YANG table on adjacency loss.
+3. **Network Topology flow panel** (id:200) — the SVG topology diagram and panelConfig metric mappings
+4. **Link status queries** in the flow panel — static `label_replace` per-link expressions
 
 ### Why this is acceptable
 
