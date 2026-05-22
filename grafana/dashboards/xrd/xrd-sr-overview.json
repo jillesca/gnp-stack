@@ -803,12 +803,12 @@
               "type": "value",
               "options": {
                 "0": {
-                  "text": "",
+                  "text": "DOWN",
                   "color": "dark-red",
                   "index": 0
                 },
                 "1": {
-                  "text": "",
+                  "text": "UP",
                   "color": "dark-green",
                   "index": 1
                 }
@@ -819,14 +819,15 @@
               "options": {
                 "match": "null+nan",
                 "result": {
-                  "text": "",
+                  "text": "N/A",
                   "color": "dark-gray",
                   "index": 2
                 }
               }
             }
           ],
-          "noValue": ""
+          "noValue": "",
+          "displayName": "${__field.name}"
         },
         "overrides": [
           {
@@ -964,12 +965,12 @@
               "type": "value",
               "options": {
                 "0": {
-                  "text": "",
+                  "text": "DOWN",
                   "color": "dark-red",
                   "index": 0
                 },
                 "1": {
-                  "text": "",
+                  "text": "UP",
                   "color": "dark-green",
                   "index": 1
                 }
@@ -980,14 +981,15 @@
               "options": {
                 "match": "null+nan",
                 "result": {
-                  "text": "",
+                  "text": "N/A",
                   "color": "dark-gray",
                   "index": 2
                 }
               }
             }
           ],
-          "noValue": ""
+          "noValue": "",
+          "displayName": "${__field.name}"
         },
         "overrides": [
           {
@@ -1125,12 +1127,12 @@
               "type": "value",
               "options": {
                 "0": {
-                  "text": "",
+                  "text": "DOWN",
                   "color": "dark-red",
                   "index": 0
                 },
                 "1": {
-                  "text": "",
+                  "text": "UP",
                   "color": "dark-green",
                   "index": 1
                 }
@@ -1141,14 +1143,15 @@
               "options": {
                 "match": "null+nan",
                 "result": {
-                  "text": "",
+                  "text": "N/A",
                   "color": "dark-gray",
                   "index": 2
                 }
               }
             }
           ],
-          "noValue": ""
+          "noValue": "",
+          "displayName": "${__field.name}"
         },
         "overrides": [
           {
@@ -1279,12 +1282,12 @@
               "type": "value",
               "options": {
                 "0": {
-                  "text": "",
+                  "text": "NOT ESTAB",
                   "color": "dark-red",
                   "index": 0
                 },
                 "1": {
-                  "text": "",
+                  "text": "ESTAB",
                   "color": "dark-green",
                   "index": 1
                 }
@@ -1295,14 +1298,15 @@
               "options": {
                 "match": "null+nan",
                 "result": {
-                  "text": "",
+                  "text": "N/A",
                   "color": "dark-gray",
                   "index": 2
                 }
               }
             }
           ],
-          "noValue": ""
+          "noValue": "",
+          "displayName": "${__field.name}"
         },
         "overrides": [
           {
