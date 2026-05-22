@@ -2,38 +2,16 @@
 
 ## Deployment Modes
 
-### 1. Full VM mode (everything on one host)
-
-All containers run on the VM. Alloy connects to XRd devices via macvlan.
-
-```bash
-make up-vm
-```
-
-Requires the `segment-routing_mgmt` macvlan network to exist on the Docker host.
-
----
-
-### 2. Full laptop mode (local dev, no syslog)
-
-All containers run on the laptop. No Alloy/syslog ingestion.
-
-```bash
-make up
-```
-
----
-
-### 3. Split mode — recommended when VM RAM is limited
+### 1. Split mode — recommended
 
 Alloy + Loki run on the **VM** (close to XRd devices, connected via macvlan).
 Grafana + Prometheus + NATS + gnmic run on the **laptop**.
 Grafana queries Loki remotely over the VPN.
 
 ```text
-VM (XRd host)                     Laptop
+VM (10.10.20.15)                  Laptop
 ─────────────────────────         ─────────────────────────
-XRd (×N)  ← containerlab         Grafana  →  Loki @ VM:3100
+XRd (×8)                          Grafana  →  Loki @ VM:3100
 Alloy     ← syslog from XRd      Prometheus
 Loki      ← Alloy push           NATS + gnmic
 port 3100 exposed                (no Loki container)
@@ -79,14 +57,6 @@ cd ansible-helper
 ansible-playbook -i hosts xrd_apply_config.yaml
 ```
 
-To override the syslog destination (e.g., for laptop mode testing):
-
-```bash
-SYSLOG_DESTINATION=192.168.254.11 ansible-playbook -i hosts xrd_apply_config.yaml
-# or
-ansible-playbook -i hosts xrd_apply_config.yaml -e syslog_destination=192.168.254.11
-```
-
 #### Split mode management
 
 ```bash
@@ -98,17 +68,32 @@ make vm-start    # start VM syslog stack (after vm-sync)
 
 ---
 
+### 2. Full VM mode — optional
+
+All containers run on the VM, including Alloy, Loki, Grafana, and Prometheus.
+
+> **Note**: This mode requires environment-specific configuration that is not maintained here. At minimum you need to set static macvlan IPs for Alloy and Grafana so they are reachable on the XRd network. See [`.env.example`](../.env.example) for the variables (`ALLOY_MACVLAN_IP`, `GRAFANA_MACVLAN_IP`) and ensure the `segment-routing_mgmt` macvlan network exists on the Docker host before running.
+
+```bash
+make up-vm
+```
+
+---
+
 ## Configuration Reference
 
-| Env var              | Default                      | Description                          |
-| -------------------- | ---------------------------- | ------------------------------------ |
-| `VM_HOST`            | `10.10.20.15`                | VM IP/hostname for SSH and rsync     |
-| `VM_USER`            | `developer`                  | SSH user on the VM                   |
-| `VM_PATH`            | `/home/developer/gnp-syslog` | Remote working directory             |
-| `LOKI_URL`           | `http://loki:3100`           | Loki URL used by Grafana datasource  |
-| `SYSLOG_DESTINATION` | `10.10.20.11`                | IP XRd devices send syslog to        |
-| `SYSLOG_PORT`        | `5514`                       | Syslog listener port                 |
-| `ALLOY_MACVLAN_IP`   | `10.10.20.11`                | Alloy's static IP on the XRd macvlan |
+| Env var              | Default                      | Description                                           |
+| -------------------- | ---------------------------- | ----------------------------------------------------- |
+| `VM_HOST`            | `10.10.20.15`                | VM IP/hostname for SSH and rsync                      |
+| `VM_USER`            | `developer`                  | SSH user on the VM                                    |
+| `VM_PATH`            | `/home/developer/gnp-syslog` | Remote working directory                              |
+| `LOKI_URL`           | `http://10.10.20.15:3100`    | Loki URL used by Grafana (set for split mode)         |
+| `SYSLOG_DESTINATION` | `10.10.20.11`                | IP XRd devices send syslog to                         |
+| `SYSLOG_PORT`        | `5514`                       | Syslog listener port                                  |
+| `ALLOY_MACVLAN_IP`   | `10.10.20.11`                | Alloy's static IP on the XRd macvlan (full-VM only)   |
+| `GRAFANA_MACVLAN_IP` | `10.10.20.12`                | Grafana's static IP on the XRd macvlan (full-VM only) |
+
+See [`.env.example`](../.env.example) for the full list with explanations.
 
 ---
 

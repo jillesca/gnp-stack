@@ -106,42 +106,44 @@ XRd runs on a Cisco DevNet sandbox VM (`10.10.20.15`) via Docker macvlan (`segme
 
 URLs are for split mode (running on laptop). In full-VM mode replace `localhost` with `10.10.20.12` for Grafana and `10.10.20.15` for everything else.
 
-| Container          | URL                             | Notes                                      |
-| ------------------ | ------------------------------- | ------------------------------------------ |
-| `grafana`          | <http://localhost:3000>         | Login: `admin` / `grafana`                 |
-| `prometheus`       | <http://localhost:9090>         | Query UI + Targets at `/targets`           |
-| `alertmanager`     | <http://localhost:9093>         | Active alerts and silences                 |
-| `nats`             | <http://localhost:8222>         | Server info; `/jsz` for JetStream details  |
-| `webhook-receiver` | <http://localhost:8080/docs>    | FastAPI interactive docs; `/health` status |
-| `alloy`            | <http://10.10.20.11:12345>      | Alloy debug UI (VM only)                   |
-| `nats-exporter`    | <http://localhost:7777/metrics> | Prometheus scrape endpoint (text)          |
-| `gnmic-ingestor`   | <http://localhost:9804/metrics> | gnmic metrics endpoint (text)              |
-| `gnmic-emitter`    | <http://localhost:9806/metrics> | gnmic metrics endpoint (text)              |
-| `loki`             | `http://10.10.20.15:3100/ready` | API only — query via Grafana               |
+| Container          | URL                              | Notes                                      |
+| ------------------ | -------------------------------- | ------------------------------------------ |
+| `grafana`          | <http://localhost:3000>          | Login: `admin` / `grafana`                 |
+| `prometheus`       | <http://localhost:9090>          | Query UI + Targets at `/targets`           |
+| `alertmanager`     | <http://localhost:9093>          | Active alerts and silences                 |
+| `nats`             | <http://localhost:8222>          | Server info; `/jsz` for JetStream details  |
+| `webhook-receiver` | <http://localhost:8080/docs>     | FastAPI interactive docs; `/health` status |
+| `alloy`            | <http://10.10.20.11:12345>       | Alloy debug UI (VM only)                   |
+| `nats-exporter`    | <http://localhost:7777/metrics>  | Prometheus scrape endpoint (text)          |
+| `gnmic-ingestor`   | <http://localhost:9804/metrics>  | gnmic metrics endpoint (text)              |
+| `gnmic-emitter`    | <http://localhost:9806/metrics>  | gnmic metrics endpoint (text)              |
+| `loki`             | <http://10.10.20.15:3100/ready > | API only — query via Grafana               |
 
 ## Deployment
 
 Alloy and Loki must run on the VM — they receive syslog from XRd via macvlan and cannot run on a laptop.
 
-### Full-VM mode (primary — everything on the VM)
+### Split mode — recommended
 
-```bash
-make up-vm
-```
-
-Requires the `segment-routing_mgmt` macvlan network and Docker on the VM host.
-
-### Split mode (Alloy+Loki on VM, rest on laptop)
+Alloy + Loki run on the VM (close to XRd, reachable via macvlan). Grafana + Prometheus + NATS + gnmic run on the laptop.
 
 ```bash
 # 1. Deploy Alloy + Loki to the VM
 make vm-deploy
 
-# 2. Start Grafana + Prometheus + NATS + gnmic on the laptop
+# 2. Start the rest on the laptop
 LOKI_URL=http://10.10.20.15:3100 make up
 ```
 
-See [docs/deployment.md](docs/deployment.md) for full prerequisites and step-by-step instructions.
+### Full-VM mode — optional
+
+Runs everything on the VM. Requires additional network and IP configuration that is environment-specific. Check [`.env.example`](.env.example) for the variables you need to set (`ALLOY_MACVLAN_IP`, `GRAFANA_MACVLAN_IP`) and ensure the `segment-routing_mgmt` macvlan network exists on the host.
+
+```bash
+make up-vm
+```
+
+See [docs/deployment.md](docs/deployment.md) for prerequisites and step-by-step instructions.
 
 ```bash
 make help   # list all targets
